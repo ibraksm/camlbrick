@@ -11,8 +11,8 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 
 @author Nolan LAURIOUX
 @author Thomas CALBERAC
-@author ...
-@author ...
+@author Ibraguim KARSAMOV
+@author Manal ALOUANI
 
 @version 1
 *)
