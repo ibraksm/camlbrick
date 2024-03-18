@@ -137,7 +137,7 @@ let make_vec2(p_x , p_y : int * int) : t_vec2 =
 *)
 let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
   (* Itération 1 *)
-  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_vec2.x) ; y = (p_vec1.y + p_vec2.y)}
+  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_vec2.x) ; y = (p_vec1.y + p_vec2.y)} in
   l_sum_vec;
 ;;
 
@@ -179,7 +179,7 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
   (* Itération 1 *)
-  l_mult_vec : t_vec2 = {x = (p_vec1.x * p_b.x) ; y = (p_vec2.y * p_b.y)} in
+  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec2.y * p_vec2.y)} in
   l_mult_vec;
 ;;
 
