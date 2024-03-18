@@ -1,0 +1,14 @@
+COMMANDES DE BASE POUR GIT :
+
+
+ATTENTION NE PAS MODIFIER LA MEME CHOSE QUE QUELQU'UN D'AUTRE SINON CONFLIT...
+
+Si je veux récup les avancements :
+
+git pull 
+
+Si je veux ajouter ce que j'ai modif :
+
+git add .
+git commit -m "message de ce que j'ai modif"
+git push
