@@ -9,8 +9,10 @@ aspect visuel! Vous pouvez utiliser le mode console.
 Le principe du jeu de casse-brique consiste à faire disparaître toutes les briques d'un niveau
 en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utilisateur.
 
-@author Hakim Ferrier-Belhaouari
-@author Agnès Arnould
+@author Nolan LAURIOUX
+@author Thomas CALBERAC
+@author ...
+@author ...
 
 @version 1
 *)
@@ -103,32 +105,40 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 
 
 (* Itération 1 *)
-type t_vec2 = unit;;
 
+(**
+    Type structuré d'un vecteur 2D.
+    Les composantes x et y sont des entiers.
+    @author Thomas CALBERAC
+*)
+type t_vec2 = {x : int ; y : int};;
 
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
   Les entiers représentent la composante en X et en Y du vecteur.
 
   Vous devez modifier cette fonction.
-  @param x première composante du vecteur
-  @param y seconde composante du vecteur
+  @param p_x première composante du vecteur
+  @param p_y seconde composante du vecteur
   @return Renvoie le vecteur dont les composantes sont (x,y).
 *)
-let make_vec2(x,y : int * int) : t_vec2 = 
+let make_vec2(p_x , p_y : int * int) : t_vec2 = 
   (* Itération 1 *)
-  ()
+  let l_vec : t_vec2 = {x = p_x ; y = p_y} in
+  l_vec;
 ;;
 
 (**
   Cette fonction renvoie un vecteur qui est la somme des deux vecteurs donnés en arguments.
-  @param a premier vecteur
-  @param b second vecteur
+  @param p_vec1 premier vecteur
+  @param p_vec2 second vecteur
   @return Renvoie un vecteur égale à la somme des vecteurs.
+  @author Thomas CALBERAC
 *)
-let vec2_add(a,b : t_vec2 * t_vec2) : t_vec2 =
+let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
   (* Itération 1 *)
-  ()
+  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_vec2.x) ; y = (p_vec1.y + p_vec2.y)}
+  l_sum_vec;
 ;;
 
 (**
@@ -142,14 +152,15 @@ let vec2_add_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
 ;;
   ]}
 
-  @param a premier vecteur
-  @param x composante en x du second vecteur
-  @param y composante en y du second vecteur
+  @param p_vec1 premier vecteur
+  @param p_x composante en x du second vecteur
+  @param p_y composante en y du second vecteur
   @return Renvoie un vecteur qui est la résultante du vecteur 
 *)
-let vec2_add_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
+let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
-  ()
+  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_x) ; y = (p_vec1.y + p_y)} in
+  l_sum_vec;
 ;;
 
 
@@ -161,13 +172,15 @@ let vec2_add_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
     c_x = a_x * b_x
     c_y = a_y * b_y
     ]}
-  @param a premier vecteur
-  @param b second vecteur
+  @param p_vec1 premier vecteur
+  @param p_vec2 second vecteur
   @return Renvoie un vecteur qui résulte de la multiplication des composantes. 
+  @author Thomas CALBERAC
 *)
-let vec2_mult(a,b : t_vec2 * t_vec2) : t_vec2 = 
+let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
   (* Itération 1 *)
-  ()
+  l_mult_vec : t_vec2 = {x = (p_vec1.x * p_b.x) ; y = (p_vec2.y * p_b.y)} in
+  l_mult_vec;
 ;;
 
 (**
@@ -178,11 +191,17 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   vec2_mult(a, make_vec2(x,y))
 ;;
   ]}
-    
+  @param p_vec1 premier vecteur
+  @param p_x composante x du second vecteur
+  @param p_y composante y du second vecteur
+  @return Renvoie un vecteur qui résulte de la multiplication des composantes.
+  @author Thomas CALBERAC
 *)
-let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
+
+let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
-  ()
+  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_x) ; y = (p_vec1.y * p_y)} in
+  l_mult_vec;
 ;;
 
 
@@ -195,8 +214,15 @@ type t_paddle = unit;;
 
 
 (* Itération 1, 2, 3 et 4 *)
-type t_camlbrick = unit
-;;
+
+(**
+    type structuré d'une brique définie par :
+    <ul>
+      <li>son type : [t_brick_kind]</li>
+      <li>sa couleur : [t_camlbrick_color]</li>
+    </ul>
+*)
+type t_camlbrick = {brick_kind : t_brick_kind ; brick_color : t_camlbrick_color};;
 
 
 (**
