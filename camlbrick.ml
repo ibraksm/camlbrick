@@ -222,7 +222,10 @@ type t_paddle = unit;;
       <li>sa couleur : [t_camlbrick_color]</li>
     </ul>
 *)
-type t_camlbrick = {brick_kind : t_brick_kind ; brick_color : t_camlbrick_color};;
+(* Ajout de brick_position dans le type camlbrick
+  @author Ibraguim KARSAMOV   
+*)
+type t_camlbrick = {brick_kind : t_brick_kind ; brick_color : t_camlbrick_color ; brick_position : t_vec2};;
 
 
 (**
@@ -310,7 +313,7 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   BK_empty
 ;;
 
-let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color = 
+let brick_color(game, i, j : t_camlbrick * int * int) : t_camlbrick_color = 
   (* Itération 1 *)
   ORANGE
 ;;
