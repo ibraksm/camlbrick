@@ -17,8 +17,6 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 @version 1
 *)
 
-#use "inter.ml";;
-
 (** Compteur utilisé en interne pour afficher le numéro de la frame du jeu vidéo. 
     Vous pouvez utiliser cette variable en lecture, mais nous ne devez pas modifier
     sa valeur! *)
