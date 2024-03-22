@@ -1,7 +1,6 @@
 open Camlbrick;;
 open Camlbrick_gui;;
 
-
 let game = make_camlbrick();;
 let param = param_get(game);;
 
