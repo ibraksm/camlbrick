@@ -17,6 +17,8 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 @version 1
 *)
 
+#use "inter.ml";;
+
 (** Compteur utilisé en interne pour afficher le numéro de la frame du jeu vidéo. 
     Vous pouvez utiliser cette variable en lecture, mais nous ne devez pas modifier
     sa valeur! *)
@@ -261,11 +263,12 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
   Une raquette par défaut et une balle par défaut dans la zone libre.
   @return Renvoie un jeu correctement initialisé
 *)
+
+(*
 let make_camlbrick() : t_camlbrick = 
   (* Itération 1, 2, 3 et 4 *)
-  ()
 ;;
-
+*)
 
 (**
   Cette fonction crée une raquette par défaut au milieu de l'écran et de taille normal.  
