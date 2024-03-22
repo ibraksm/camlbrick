@@ -316,19 +316,9 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
 let brick_color(game, i, j : t_camlbrick * int * int) : t_camlbrick_color = 
   (* Itération 1 *)
   (*
-    Si la brique est simple elle est bleue, si elle est double elle est violette, si c'est un bonus elle est jaune
-    et BK_block est blanc
     @author Ibraguim KARSAMOV
   *)
-  if game.brick_kind = BK_simple
-  then BLUE
-  else
-    if game.brick_kind = BK_double
-    then PURPLE
-    else
-      if game.brick_kind = BK_bonus
-      then YELLOW
-      else WHITE 
+  game.brick_color
 ;;
 
 
