@@ -216,13 +216,27 @@ type t_paddle = unit;;
 (* Itération 1, 2, 3 et 4 *)
 
 (**
-    type structuré d'une brique définie par :
-    <ul>
-      <li>son type : [t_brick_kind]</li>
-      <li>sa couleur : [t_camlbrick_color]</li>
-    </ul>
+  Type énuméré qui définit tous les assets d'une partie :
+  <ul>
+    <li>les paramètres de la partie</li>
+    <li>les types possibles pour les briques</li>
+    <li>les couleurs possibles pour le jeu</li>
+    <li>le compteur de temps pour le jeu</li>
+    <li>la taille du tableau de brique</li>
+    <li>la taille de la balle</li>
+  </ul>
+
+  @author Thomas CALBERAC
 *)
-type t_camlbrick = unit;;
+type t_camlbrick = {
+  param : t_camlbrick_param ;
+  brick_kind : t_brick_kind ;
+  brick_color : t_camlbrick_color ;
+  gamestate : t_gamestate ;
+  grid : t_brick_kind array array ;
+  ball : t_ball_size ;
+  }
+;;
 
 
 (**
@@ -250,12 +264,14 @@ let make_camlbrick_param() : t_camlbrick_param = {
   Cette fonction extrait le paramétrage d'un jeu à partir du jeu donné en argument.
   @param game jeu en cours d'exécution.
   @return Renvoie le paramétrage actuel.
+
+  @author Thomas CALBERAC
   *)
 let param_get(game : t_camlbrick) : t_camlbrick_param =
   (* Itération 1 *)
-  make_camlbrick_param()
+  game.param
 ;;
-
+(*
 (**
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
   Une raquette par défaut et une balle par défaut dans la zone libre.
@@ -263,9 +279,16 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 *)
 let make_camlbrick() : t_camlbrick = 
   (* Itération 1, 2, 3 et 4 *)
-  ()
+  {
+  param = t_camlbrick_param ;
+  brick_kind = t_brick_kind ;
+  brick_color = t_camlbrick_color ;
+  gamestate = t_gamestate ;
+  grid = t_brick_kind array array ;
+  ball = t_ball_size ;
+  }
 ;;
-
+*)
 
 (**
   Cette fonction crée une raquette par défaut au milieu de l'écran et de taille normal.  
@@ -300,19 +323,78 @@ let string_of_gamestate(game : t_camlbrick) : string =
 
 let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   (* Itération 1 *)
-  if i = 1 && j = 1
-  then BK_empty
-  else BK_simple 
+  (game.grid).(i).(j)
 ;;
+(**
+    fonction qui définit les réactions des briques quand la balle les touches :
+    <ul>
+      <li>Une brique simple (BK_simple) disparait.</li>
+      <li>un bloc (BK_block) ne peut pas être détruit.</li>
+      <li>une brique double (BK_double) devient une brique simple.</li>
+      <li>une brique bonus (BK_bonus) disparait et une action devra être lancée</li>
+    </ul>
 
-let brick_hit(game, i, j : t_camlbrick * int * int)  : t_brick_kind = 
+    @param game partie de type t_camlbrick
+    @param i coordonnée en x de la brique
+    @param j coordonnée en y de la brique
+    @return Change la brique 
+*)
+let brick_hit(game, i, j : t_camlbrick * int * int)  : unit = 
   (* Itération 1 *)
-  BK_empty
+  let current_brick : t_brick_kind = brick_get(game , i , j) in
+  if current_brick = BK_double
+  then
+    game.grid.(i).(j) <- BK_simple
+  else
+    if current_brick = BK_simple
+    then
+      game.grid.(i).(j) <- BK_empty
+    else
+      if current_brick = BK_bonus
+        then
+          game.grid.(i).(j) <- BK_empty
+          (* bonus = activated à rajouter quand fonction faite *)
+        else
+          ()
 ;;
 
+(**
+    fonction qui prend en paramètre une game et les coordonnées d'une brique et renvoi
+    la couleur de la brique.
+     <ul>
+      <li>Brique Block = Noire</li>
+      <li>Brique Vide = Gris (couleur du fond d'écran)</li>
+      <li>Brique Simple = Jaune</li>
+      <li>Brique Bonus = Rouge</li>
+      <li>Brique Double = Vert</li>
+    </ul>
+
+    @param game partie de type t_camlbrick
+    @param i coordonnée en x de la brique
+    @param j coordonnée en y de la brique
+    @return Renvoie la couleur de la brique
+
+    @author Thomas CALBERAC
+*)
 let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color = 
   (* Itération 1 *)
-  ORANGE
+  if brick_get(game , i , j) = BK_block
+  then 
+    BLACK
+  else
+    if brick_get(game , i , j) = BK_empty
+      then 
+        GRAY
+      else
+        if brick_get(game , i , j) = BK_simple
+          then 
+            YELLOW
+          else
+            if brick_get(game , i , j) = BK_bonus
+              then 
+                RED
+              else
+                GREEN
 ;;
 
 
