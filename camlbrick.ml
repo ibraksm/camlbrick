@@ -11,8 +11,8 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 
 @author Nolan LAURIOUX
 @author Thomas CALBERAC
-@author ...
-@author ...
+@author Ibraguim KARSAMOV
+@author Manal ALOUANI
 
 @version 1
 *)
@@ -179,7 +179,7 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
   (* Itération 1 *)
-  l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec2.y * p_vec2.y)} in
+  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec2.y * p_vec2.y)} in
   l_mult_vec;
 ;;
 
