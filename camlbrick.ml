@@ -109,6 +109,7 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 (**
     Type structuré d'un vecteur 2D.
     Les composantes x et y sont des entiers.
+    
     @author Thomas CALBERAC
 *)
 type t_vec2 = {x : int ; y : int};;
@@ -121,6 +122,8 @@ type t_vec2 = {x : int ; y : int};;
   @param p_x première composante du vecteur
   @param p_y seconde composante du vecteur
   @return Renvoie le vecteur dont les composantes sont (x,y).
+
+  @author Thomas CALBERAC
 *)
 let make_vec2(p_x , p_y : int * int) : t_vec2 = 
   (* Itération 1 *)
@@ -161,6 +164,7 @@ test_make_vec2();;
   @param p_vec1 premier vecteur
   @param p_vec2 second vecteur
   @return Renvoie un vecteur égale à la somme des vecteurs.
+
   @author Thomas CALBERAC
 *)
 let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
@@ -213,6 +217,8 @@ let vec2_add_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   @param p_x composante en x du second vecteur
   @param p_y composante en y du second vecteur
   @return Renvoie un vecteur qui est la résultante du vecteur 
+
+  @author Thomas CALBERAC
 *)
 let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
@@ -260,6 +266,7 @@ test_vec2_add_scalar();;
   @param p_vec1 premier vecteur
   @param p_vec2 second vecteur
   @return Renvoie un vecteur qui résulte de la multiplication des composantes. 
+
   @author Thomas CALBERAC
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
@@ -309,6 +316,7 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   @param p_x composante x du second vecteur
   @param p_y composante y du second vecteur
   @return Renvoie un vecteur qui résulte de la multiplication des composantes.
+
   @author Thomas CALBERAC
 *)
 
@@ -369,16 +377,12 @@ type t_paddle = unit;;
 
   @author Thomas CALBERAC
 *)
-type t_camlbrick = {
-  param : t_camlbrick_param ;
-  brick_kind : t_brick_kind ;
-  brick_color : t_camlbrick_color ;
-  gamestate : t_gamestate ;
-  grid : t_brick_kind array array ;
-  ball : t_ball_size ;
+type t_camlbrick = 
+  {
+  param : t_camlbrick_param ; (** paramètres de la partie *)
+  grid : t_brick_kind array array ; (** matrice contenant toutes les briques *)
   }
 ;;
-
 
 (**
   Cette fonction construit le paramétrage du jeu, avec des informations personnalisable avec les contraintes du sujet.
@@ -417,21 +421,17 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
   Une raquette par défaut et une balle par défaut dans la zone libre.
   @return Renvoie un jeu correctement initialisé
-*)
 
-(*
+  @author Thomas CALBERAC
+*)
 let make_camlbrick() : t_camlbrick = 
   (* Itération 1, 2, 3 et 4 *)
+  let l_param : t_camlbrick_param = make_camlbrick_param() in
   {
-  param = t_camlbrick_param ;
-  brick_kind = t_brick_kind ;
-  brick_color = t_camlbrick_color ;
-  gamestate = t_gamestate ;
-  grid = t_brick_kind array array ;
-  ball = t_ball_size ;
+  param = l_param ;
+  grid = Array.make (l_param.world_bricks_height / l_param.brick_height) (Array.make (l_param.world_width / l_param.brick_width)  BK_empty)
   }
 ;;
-*)
 
 (**
   Cette fonction crée une raquette par défaut au milieu de l'écran et de taille normal.  
@@ -448,8 +448,6 @@ let make_ball(x,y, size : int * int * int) : t_ball =
 ;;
 
 
-
-
 (**
   Fonction utilitaire qui permet de traduire l'état du jeu sous la forme d'une chaîne de caractère.
   Cette fonction est appelée à chaque frame, et est affichée directement dans l'interface graphique.
@@ -464,6 +462,16 @@ let string_of_gamestate(game : t_camlbrick) : string =
   "INCONNU"
 ;;
 
+(**
+    fonction qui récupère une brique à des coordonnées données à 
+    partir d'une game
+
+    @param game représente le jeu en cours d'exécution.
+    @param i coordonnée y de la brique
+    @param j coordonnée x de la brique
+
+    @author Thomas CALBERAC
+*)
 let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   (* Itération 1 *)
   (game.grid).(i).(j)
@@ -478,9 +486,11 @@ let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
     </ul>
 
     @param game partie de type t_camlbrick
-    @param i coordonnée en x de la brique
-    @param j coordonnée en y de la brique
+    @param i coordonnée en y de la brique
+    @param j coordonnée en x de la brique
     @return Change la brique 
+
+    @author Thomas CALBERAC
 *)
 let brick_hit(game, i, j : t_camlbrick * int * int)  : unit = 
   (* Itération 1 *)
@@ -513,13 +523,13 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : unit =
     </ul>
 
     @param game partie de type t_camlbrick
-    @param i coordonnée en x de la brique
-    @param j coordonnée en y de la brique
+    @param i coordonnée en y de la brique
+    @param j coordonnée en x de la brique
     @return Renvoie la couleur de la brique
 
     @author Thomas CALBERAC
 *)
-let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color = 
+let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color = 
   (* Itération 1 *)
   if brick_get(game , i , j) = BK_block
   then 
@@ -634,7 +644,6 @@ let ball_hit_paddle(game,ball,paddle : t_camlbrick * t_ball * t_paddle) : unit =
   (* Itération 3 *)
   ()
 ;;
-
 
 (* lire l'énoncé choix à faire *)
 let ball_hit_corner_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : bool =
