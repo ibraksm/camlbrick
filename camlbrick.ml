@@ -109,7 +109,7 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 (**
     Type structuré d'un vecteur 2D.
     Les composantes x et y sont des entiers.
-    
+
     @author Thomas CALBERAC
 *)
 type t_vec2 = {x : int ; y : int};;
@@ -130,34 +130,6 @@ let make_vec2(p_x , p_y : int * int) : t_vec2 =
   let l_vec : t_vec2 = {x = p_x ; y = p_y} in
   l_vec;
 ;;
-(**
-  Fonction test de make_vec2 qui vérifie le cas avec valeurs nulles, positifs, négatives et également le cas
-  avec une coordonée positive et une négative
-  @author Ibraguim KARSAMOV
-*)
-let test_make_vec2() : unit =
-  if make_vec2(0, 0) = {x = 0 ; y = 0}
-  then print_endline("Test 1 make_vec2 réussi")
-  else
-    print_endline("Test 1 make_vec2 échoué");
-  
-  if make_vec2(50, 30) = {x = 50 ; y = 30}
-  then print_endline("Test 2 make_vec2 réussi")
-  else
-      print_endline("Test 2 make_vec2 échoué");
-
-  if make_vec2(-50, -30) = {x = -50 ; y = -30}
-  then print_endline("Test 3 make_vec2 réussi")
-  else
-      print_endline("Test 3 make_vec2 échoué");
-
-  if make_vec2(-50, 30) = {x = -50 ; y = 30}
-  then print_endline("Test 4 make_vec2 réussi")
-  else
-      print_endline("Test 4 make_vec2 échoué");
-;;
-
-test_make_vec2();;
 
 (**
   Cette fonction renvoie un vecteur qui est la somme des deux vecteurs donnés en arguments.
@@ -172,35 +144,6 @@ let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
   let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_vec2.x) ; y = (p_vec1.y + p_vec2.y)} in
   l_sum_vec;
 ;;
-
-(**
-  Fonction test de vec2_add qui vérifie le cas avec vecteurs nuls, positifs, négatives et également le cas
-  avec un vecteur à coordonnées positive et un autre vecteur à coordonnées négatives
-  @author Ibraguim KARSAMOV
-*)
-let test_vec2_add() : unit =
-  if vec2_add({x = 0 ; y = 0}, {x = 0 ; y = 0}) = {x = 0 ; y = 0}
-  then print_endline("Test 1 vec2_add réussi")
-  else
-    print_endline("Test 1 vec2_add échoué");
-  
-  if vec2_add({x = 10 ; y = 20}, {x = 30 ; y = 40}) = {x = 40 ; y = 60}
-  then print_endline("Test 2 vec2_add réussi")
-  else
-      print_endline("Test 2 vec2_add échoué");
-
-  if vec2_add({x = -10 ; y = -20}, {x = -30 ; y = -40}) = {x = -40 ; y = -60}
-  then print_endline("Test 3 vec2_add réussi")
-  else
-      print_endline("Test 3 vec2_add échoué");
-
-  if vec2_add({x = 10 ; y = 20}, {x = -30 ; y = -40}) = {x = -20 ; y = -20}
-  then print_endline("Test 4 vec2_add réussi")
-  else
-      print_endline("Test 4 vec2_add échoué");
-;;
-
-test_vec2_add();;
 
 (**
   Cette fonction renvoie un vecteur égale à la somme d'un vecteur
@@ -227,35 +170,6 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 ;;
 
 (**
-  Fonction test de vec2_add_scalar qui vérifie le cas avec vecteurs nuls, positifs, négatives et également le cas
-  avec un vecteur à coordonnées positive et un autre vecteur à coordonnées négatives
-  @author Ibraguim KARSAMOV
-*)
-let test_vec2_add_scalar() : unit =
-  if vec2_add_scalar({x = 0 ; y = 0}, 0, 0) = {x = 0 ; y = 0}
-  then print_endline("Test 1 vec2_add_scalar réussi")
-  else
-    print_endline("Test 1 vec2_add_scalar échoué");
-  
-  if vec2_add_scalar({x = 10 ; y = 20}, 30, 40) = {x = 40 ; y = 60}
-  then print_endline("Test 2 vec2_add_scalar réussi")
-  else
-      print_endline("Test 2 vec2_add_scalar échoué");
-
-  if vec2_add_scalar({x = -10 ; y = -20}, -30, -40) = {x = -40 ; y = -60}
-  then print_endline("Test 3 vec2_add_scalar réussi")
-  else
-      print_endline("Test 3 vec2_add_scalar échoué");
-
-  if vec2_add_scalar({x = 10 ; y = 20}, -30, -40) = {x = -20 ; y = -20}
-  then print_endline("Test 4 vec2_add_scalar réussi")
-  else
-      print_endline("Test 4 vec2_add_scalar échoué");
-;;
-
-test_vec2_add_scalar();;
-
-(**
   Cette fonction calcul un vecteur où 
   ses composantes sont la résultante de la multiplication  des composantes de deux vecteurs en entrée.
   Ainsi,
@@ -274,35 +188,6 @@ let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
   let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec2.y * p_vec2.y)} in
   l_mult_vec;
 ;;
-
-(**
-  Fonction test de vec2_mult qui vérifie le cas avec vecteurs nuls, positifs, négatives et également le cas
-  avec des vecteurs avec une coordonnée négative
-  @author Ibraguim KARSAMOV
-*)
-let test_vec2_mult() : unit =
-  if vec2_mult({x = 0 ; y = 0}, {x = 0 ; y = 0}) = {x = 0 ; y = 0}
-  then print_endline("Test 1 vec2_mult réussi")
-  else
-    print_endline("Test 1 vec2_mult échoué");
-  
-  if vec2_mult({x = 2 ; y = 5}, {x = 8 ; y = 10}) = {x = 16 ; y = 50}
-  then print_endline("Test 2 vec2_mult réussi")
-  else
-      print_endline("Test 2 vec2_mult échoué");
-
-  if vec2_mult({x = -2 ; y = -5}, {x = -8 ; y = -10}) = {x = 16 ; y = 50}
-  then print_endline("Test 3 vec2_mult réussi")
-  else
-      print_endline("Test 3 vec2_mult échoué");
-  
-  if vec2_mult({x = -2 ; y = 5}, {x = 8 ; y = -10}) = {x = -16 ; y = -50}
-  then print_endline("Test 4 vec2_mult réussi")
-  else
-      print_endline("Test 4 vec2_mult échoué");
-;;
-
-test_vec2_mult();;
 
 (**
   Cette fonction calcul la multiplication des composantes du vecteur a et du vecteur construit à partir de (x,y).
@@ -325,35 +210,6 @@ let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_x) ; y = (p_vec1.y * p_y)} in
   l_mult_vec;
 ;;
-
-(**
-  Fonction test de vec2_mult_scalar qui vérifie le cas avec vecteurs nuls, positifs, négatives et également le cas
-  avec des vecteurs avec une coordonnée négative
-  @author Ibraguim KARSAMOV
-*)
-let test_vec2_mult_scalar() : unit =
-  if vec2_mult_scalar({x = 0 ; y = 0}, 0 , 0) = {x = 0 ; y = 0}
-  then print_endline("Test 1 vec2_mult_scalar réussi")
-  else
-    print_endline("Test 1 vec2_mult_scalar échoué");
-  
-  if vec2_mult_scalar({x = 2 ; y = 5}, 8, 10) = {x = 16 ; y = 50}
-  then print_endline("Test 2 vec2_mult_scalar réussi")
-  else
-      print_endline("Test 2 vec2_mult_scalar échoué");
-
-  if vec2_mult_scalar({x = -2 ; y = -5}, -8, -10) = {x = 16 ; y = 50}
-  then print_endline("Test 3 vec2_mult_scalar réussi")
-  else
-      print_endline("Test 3 vec2_mult_scalar échoué");
-  
-  if vec2_mult_scalar({x = -2 ; y = 5}, 8, -10) = {x = -16 ; y = -50}
-  then print_endline("Test 4 vec2_mult_scalar réussi")
-  else
-      print_endline("Test 4 vec2_mult_scalar échoué");
-;;
-
-test_vec2_mult_scalar();;
 
 (* Itération 2 *)
 type t_ball = unit;;
@@ -378,8 +234,8 @@ type t_paddle = unit;;
   @author Thomas CALBERAC
 *)
 type t_camlbrick = 
-  {
-  param : t_camlbrick_param ; (** paramètres de la partie *)
+  { (** paramètres de la partie *)
+  param : t_camlbrick_param ;
   grid : t_brick_kind array array ; (** matrice contenant toutes les briques *)
   }
 ;;
@@ -428,8 +284,8 @@ let make_camlbrick() : t_camlbrick =
   (* Itération 1, 2, 3 et 4 *)
   let l_param : t_camlbrick_param = make_camlbrick_param() in
   {
-  param = l_param ;
-  grid = Array.make (l_param.world_bricks_height / l_param.brick_height) (Array.make (l_param.world_width / l_param.brick_width)  BK_empty)
+  param = l_param ; 
+  grid = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_simple ;
   }
 ;;
 

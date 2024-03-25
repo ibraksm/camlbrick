@@ -1,14 +1,12 @@
-(* #directory "+labltk";;
+ #directory "+labltk";;
 #load "labltk.cma";;
 
-#mod_use "camlbrick.ml";; *)
+#mod_use "camlbrick.ml";; 
 
 (* https://who.rocq.inria.fr/Francois.Thomasset/Labltk/Tutoriel_FT/ *)
 
-
 open Tk
 open Printf
-
 open Camlbrick
 
 type t_camlbrick_gui = {
