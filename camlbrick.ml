@@ -109,6 +109,7 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 (**
     Type structuré d'un vecteur 2D.
     Les composantes x et y sont des entiers.
+    
     @author Thomas CALBERAC
 *)
 type t_vec2 = {x : int ; y : int};;
@@ -121,37 +122,13 @@ type t_vec2 = {x : int ; y : int};;
   @param p_x première composante du vecteur
   @param p_y seconde composante du vecteur
   @return Renvoie le vecteur dont les composantes sont (x,y).
+
+  @author Thomas CALBERAC
 *)
 let make_vec2(p_x , p_y : int * int) : t_vec2 = 
   (* Itération 1 *)
   let l_vec : t_vec2 = {x = p_x ; y = p_y} in
   l_vec;
-;;
-(*
-Fonction test de make_vec2 qui vérifie le cas avec valeurs nulles, positifs, négatives et également le cas
-avec une coordonée positive et une négative
-@author Ibraguim KARSAMOV
-*)
-let test_make_vec2() : unit =
-  if make_vec2(0, 0) = {x = 0 ; y = 0}
-  then print_endline("Test 1 make_vec2 réussi")
-  else
-    print_endline("Test 1 make_vec2 échoué");
-  
-  if make_vec2(50, 30) = {x = 50 ; y = 30}
-  then print_endline("Test 2 make_vec2 réussi")
-  else
-      print_endline("Test 2 make_vec2 échoué");
-
-  if make_vec2(-50, -30) = {x = -50 ; y = -30}
-  then print_endline("Test 3 make_vec2 réussi")
-  else
-      print_endline("Test 3 make_vec2 échoué");
-
-  if make_vec2(-50, 30) = {x = -50 ; y = 30}
-  then print_endline("Test 4 make_vec2 réussi")
-  else
-      print_endline("Test 4 make_vec2 échoué");
 ;;
 
 (**
@@ -159,6 +136,7 @@ let test_make_vec2() : unit =
   @param p_vec1 premier vecteur
   @param p_vec2 second vecteur
   @return Renvoie un vecteur égale à la somme des vecteurs.
+
   @author Thomas CALBERAC
 *)
 let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
@@ -182,6 +160,8 @@ let vec2_add_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   @param p_x composante en x du second vecteur
   @param p_y composante en y du second vecteur
   @return Renvoie un vecteur qui est la résultante du vecteur 
+
+  @author Thomas CALBERAC
 *)
 let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
@@ -201,6 +181,7 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   @param p_vec1 premier vecteur
   @param p_vec2 second vecteur
   @return Renvoie un vecteur qui résulte de la multiplication des composantes. 
+
   @author Thomas CALBERAC
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
@@ -221,6 +202,7 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   @param p_x composante x du second vecteur
   @param p_y composante y du second vecteur
   @return Renvoie un vecteur qui résulte de la multiplication des composantes.
+
   @author Thomas CALBERAC
 *)
 
@@ -298,6 +280,8 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
   Une raquette par défaut et une balle par défaut dans la zone libre.
   @return Renvoie un jeu correctement initialisé
+
+  @author Thomas CALBERAC
 *)
 let make_camlbrick() : t_camlbrick = 
   (* Itération 1, 2, 3 et 4 *)
@@ -344,6 +328,8 @@ let string_of_gamestate(game : t_camlbrick) : string =
     @param game représente le jeu en cours d'exécution.
     @param i coordonnée y de la brique
     @param j coordonnée x de la brique
+
+    @author Thomas CALBERAC
 *)
 let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   (* Itération 1 *)
@@ -362,6 +348,8 @@ let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
     @param i coordonnée en y de la brique
     @param j coordonnée en x de la brique
     @return Change la brique 
+
+    @author Thomas CALBERAC
 *)
 let brick_hit(game, i, j : t_camlbrick * int * int)  : unit = 
   (* Itération 1 *)
