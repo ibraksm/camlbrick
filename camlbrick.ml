@@ -228,20 +228,12 @@ type t_paddle = unit;;
 
   @author Thomas CALBERAC
 *)
-<<<<<<< HEAD
-type t_camlbrick = {
-  param : t_camlbrick_param ;
-  brick_kind : t_brick_kind ;
-  brick_color : t_camlbrick_color ;
-  gamestate : t_gamestate ;
-  grid : t_brick_kind array array ;
-  ball : t_ball_size ;
+type t_camlbrick = 
+  {
+  param : t_camlbrick_param ; (** paramètres de la partie *)
+  grid : t_brick_kind array array ; (** matrice contenant toutes les briques *)
   }
 ;;
-=======
-type t_camlbrick = {brick_kind : t_brick_kind ; brick_color : t_camlbrick_color};;
->>>>>>> b02e41ed0347ae8a3a44ac2612e91ed2491c36d6
-
 
 (**
   Cette fonction construit le paramétrage du jeu, avec des informations personnalisable avec les contraintes du sujet.
@@ -275,29 +267,21 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
   (* Itération 1 *)
   game.param
 ;;
-(*
+
+
 (**
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
   Une raquette par défaut et une balle par défaut dans la zone libre.
   @return Renvoie un jeu correctement initialisé
 *)
-
-(*
 let make_camlbrick() : t_camlbrick = 
   (* Itération 1, 2, 3 et 4 *)
-<<<<<<< HEAD
+  let l_param : t_camlbrick_param = make_camlbrick_param() in
   {
-  param = t_camlbrick_param ;
-  brick_kind = t_brick_kind ;
-  brick_color = t_camlbrick_color ;
-  gamestate = t_gamestate ;
-  grid = t_brick_kind array array ;
-  ball = t_ball_size ;
+  param = l_param ;
+  grid = Array.make (l_param.world_bricks_height / l_param.brick_height) (Array.make (l_param.world_width / l_param.brick_width)  BK_empty)
   }
-=======
->>>>>>> b02e41ed0347ae8a3a44ac2612e91ed2491c36d6
 ;;
-*)
 
 (**
   Cette fonction crée une raquette par défaut au milieu de l'écran et de taille normal.  
@@ -314,8 +298,6 @@ let make_ball(x,y, size : int * int * int) : t_ball =
 ;;
 
 
-
-
 (**
   Fonction utilitaire qui permet de traduire l'état du jeu sous la forme d'une chaîne de caractère.
   Cette fonction est appelée à chaque frame, et est affichée directement dans l'interface graphique.
@@ -330,6 +312,14 @@ let string_of_gamestate(game : t_camlbrick) : string =
   "INCONNU"
 ;;
 
+(**
+    fonction qui récupère une brique à des coordonnées données à 
+    partir d'une game
+
+    @param game représente le jeu en cours d'exécution.
+    @param i coordonnée y de la brique
+    @param j coordonnée x de la brique
+*)
 let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   (* Itération 1 *)
   (game.grid).(i).(j)
@@ -344,8 +334,8 @@ let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
     </ul>
 
     @param game partie de type t_camlbrick
-    @param i coordonnée en x de la brique
-    @param j coordonnée en y de la brique
+    @param i coordonnée en y de la brique
+    @param j coordonnée en x de la brique
     @return Change la brique 
 *)
 let brick_hit(game, i, j : t_camlbrick * int * int)  : unit = 
@@ -367,7 +357,6 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : unit =
           ()
 ;;
 
-<<<<<<< HEAD
 (**
     fonction qui prend en paramètre une game et les coordonnées d'une brique et renvoi
     la couleur de la brique.
@@ -380,13 +369,13 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : unit =
     </ul>
 
     @param game partie de type t_camlbrick
-    @param i coordonnée en x de la brique
-    @param j coordonnée en y de la brique
+    @param i coordonnée en y de la brique
+    @param j coordonnée en x de la brique
     @return Renvoie la couleur de la brique
 
     @author Thomas CALBERAC
 *)
-let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color = 
+let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color = 
   (* Itération 1 *)
   if brick_get(game , i , j) = BK_block
   then 
@@ -405,14 +394,6 @@ let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color =
                 RED
               else
                 GREEN
-=======
-let brick_color(game, i, j : t_camlbrick * int * int) : t_camlbrick_color = 
-  (* Itération 1 *)
-  (*
-    @author Ibraguim KARSAMOV
-  *)
-  game.brick_color
->>>>>>> b02e41ed0347ae8a3a44ac2612e91ed2491c36d6
 ;;
 
 
@@ -509,7 +490,6 @@ let ball_hit_paddle(game,ball,paddle : t_camlbrick * t_ball * t_paddle) : unit =
   (* Itération 3 *)
   ()
 ;;
-
 
 (* lire l'énoncé choix à faire *)
 let ball_hit_corner_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : bool =
