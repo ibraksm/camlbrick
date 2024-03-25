@@ -127,6 +127,32 @@ let make_vec2(p_x , p_y : int * int) : t_vec2 =
   let l_vec : t_vec2 = {x = p_x ; y = p_y} in
   l_vec;
 ;;
+(*
+Fonction test de make_vec2 qui vérifie le cas avec valeurs nulles, positifs, négatives et également le cas
+avec une coordonée positive et une négative
+@author Ibraguim KARSAMOV
+*)
+let test_make_vec2() : unit =
+  if make_vec2(0, 0) = {x = 0 ; y = 0}
+  then print_endline("Test 1 make_vec2 réussi")
+  else
+    print_endline("Test 1 make_vec2 échoué");
+  
+  if make_vec2(50, 30) = {x = 50 ; y = 30}
+  then print_endline("Test 2 make_vec2 réussi")
+  else
+      print_endline("Test 2 make_vec2 échoué");
+
+  if make_vec2(-50, -30) = {x = -50 ; y = -30}
+  then print_endline("Test 3 make_vec2 réussi")
+  else
+      print_endline("Test 3 make_vec2 échoué");
+
+  if make_vec2(-50, 30) = {x = -50 ; y = 30}
+  then print_endline("Test 4 make_vec2 réussi")
+  else
+      print_endline("Test 4 make_vec2 échoué");
+;;
 
 (**
   Cette fonction renvoie un vecteur qui est la somme des deux vecteurs donnés en arguments.
@@ -267,7 +293,6 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
   (* Itération 1 *)
   game.param
 ;;
-
 
 (**
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
