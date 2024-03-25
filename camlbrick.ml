@@ -127,6 +127,32 @@ let make_vec2(p_x , p_y : int * int) : t_vec2 =
   let l_vec : t_vec2 = {x = p_x ; y = p_y} in
   l_vec;
 ;;
+(*
+Fonction test de make_vec2 qui vérifie le cas avec valeurs nulles, positifs, négatives et également le cas
+avec une coordonée positive et une négative
+@author Ibraguim KARSAMOV
+*)
+let test_make_vec2() : unit =
+  if make_vec2(0, 0) = {x = 0 ; y = 0}
+  then print_endline("Test 1 make_vec2 réussi")
+  else
+    print_endline("Test 1 make_vec2 échoué");
+  
+  if make_vec2(50, 30) = {x = 50 ; y = 30}
+  then print_endline("Test 2 make_vec2 réussi")
+  else
+      print_endline("Test 2 make_vec2 échoué");
+
+  if make_vec2(-50, -30) = {x = -50 ; y = -30}
+  then print_endline("Test 3 make_vec2 réussi")
+  else
+      print_endline("Test 3 make_vec2 échoué");
+
+  if make_vec2(-50, 30) = {x = -50 ; y = 30}
+  then print_endline("Test 4 make_vec2 réussi")
+  else
+      print_endline("Test 4 make_vec2 échoué");
+;;
 
 (**
   Cette fonction renvoie un vecteur qui est la somme des deux vecteurs donnés en arguments.
@@ -228,7 +254,6 @@ type t_paddle = unit;;
 
   @author Thomas CALBERAC
 *)
-<<<<<<< HEAD
 type t_camlbrick = {
   param : t_camlbrick_param ;
   brick_kind : t_brick_kind ;
@@ -238,9 +263,6 @@ type t_camlbrick = {
   ball : t_ball_size ;
   }
 ;;
-=======
-type t_camlbrick = {brick_kind : t_brick_kind ; brick_color : t_camlbrick_color};;
->>>>>>> b02e41ed0347ae8a3a44ac2612e91ed2491c36d6
 
 
 (**
@@ -275,7 +297,7 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
   (* Itération 1 *)
   game.param
 ;;
-(*
+
 (**
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
   Une raquette par défaut et une balle par défaut dans la zone libre.
@@ -285,7 +307,6 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 (*
 let make_camlbrick() : t_camlbrick = 
   (* Itération 1, 2, 3 et 4 *)
-<<<<<<< HEAD
   {
   param = t_camlbrick_param ;
   brick_kind = t_brick_kind ;
@@ -294,8 +315,6 @@ let make_camlbrick() : t_camlbrick =
   grid = t_brick_kind array array ;
   ball = t_ball_size ;
   }
-=======
->>>>>>> b02e41ed0347ae8a3a44ac2612e91ed2491c36d6
 ;;
 *)
 
@@ -367,7 +386,6 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : unit =
           ()
 ;;
 
-<<<<<<< HEAD
 (**
     fonction qui prend en paramètre une game et les coordonnées d'une brique et renvoi
     la couleur de la brique.
@@ -405,14 +423,6 @@ let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color =
                 RED
               else
                 GREEN
-=======
-let brick_color(game, i, j : t_camlbrick * int * int) : t_camlbrick_color = 
-  (* Itération 1 *)
-  (*
-    @author Ibraguim KARSAMOV
-  *)
-  game.brick_color
->>>>>>> b02e41ed0347ae8a3a44ac2612e91ed2491c36d6
 ;;
 
 
