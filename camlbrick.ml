@@ -116,12 +116,12 @@ type t_vec2 = {x : int ; y : int};;
 
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
-  Les entiers représentent la composante en X et en Y du vecteur.
+  Les entiers représentent la composante en X et en Y du vecteur exprimé 
+  avec un type structuré.
 
-  Vous devez modifier cette fonction.
   @param p_x première composante du vecteur
   @param p_y seconde composante du vecteur
-  @return Renvoie le vecteur dont les composantes sont (x,y).
+  @return Renvoie le vecteur de type t_vec2 dont les composantes sont (x,y).
 
   @author Thomas CALBERAC
 *)
@@ -204,7 +204,6 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
 
   @author Thomas CALBERAC
 *)
-
 let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
   let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_x) ; y = (p_vec1.y * p_y)} in
@@ -280,13 +279,22 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 
   @author Thomas CALBERAC
 *)
-let make_camlbrick() : t_camlbrick = 
+let make_camlbrick() : t_camlbrick =
+
   (* Itération 1, 2, 3 et 4 *)
+
+  let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
   let l_param : t_camlbrick_param = make_camlbrick_param() in
-  {
-  param = l_param ; 
-  grid = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_simple ;
-  }
+  let l_grid : t_brick_kind array array = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_empty in
+  
+  for i = 0 to (l_param.world_width / l_param.brick_width) - 1
+  do
+    for j = 0 to (l_param.world_bricks_height / l_param.brick_height) - 1
+    do
+      l_grid.(i).(j) <- brick_kind.(Random.int(5))
+    done;
+  done;
+  {param = l_param ; grid = l_grid};
 ;;
 
 (**
