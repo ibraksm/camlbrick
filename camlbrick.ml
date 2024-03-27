@@ -319,7 +319,6 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
 
   @author Thomas CALBERAC
 *)
-
 let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
   let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_x) ; y = (p_vec1.y * p_y)} in
