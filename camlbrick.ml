@@ -109,18 +109,28 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 (**
     Type structuré d'un vecteur 2D.
     Les composantes x et y sont des entiers.
+<<<<<<< HEAD
+=======
+
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
     @author Thomas CALBERAC
 *)
 type t_vec2 = {x : int ; y : int};;
 
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
-  Les entiers représentent la composante en X et en Y du vecteur.
+  Les entiers représentent la composante en X et en Y du vecteur exprimé 
+  avec un type structuré.
 
-  Vous devez modifier cette fonction.
   @param p_x première composante du vecteur
   @param p_y seconde composante du vecteur
+<<<<<<< HEAD
   @return Renvoie le vecteur dont les composantes sont (x,y).
+=======
+  @return Renvoie le vecteur de type t_vec2 dont les composantes sont (x,y).
+
+  @author Thomas CALBERAC
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 *)
 let make_vec2(p_x , p_y : int * int) : t_vec2 = 
   (* Itération 1 *)
@@ -163,7 +173,10 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   l_sum_vec;
 ;;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 (**
   Cette fonction calcul un vecteur où 
   ses composantes sont la résultante de la multiplication  des composantes de deux vecteurs en entrée.
@@ -179,7 +192,11 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
   (* Itération 1 *)
+<<<<<<< HEAD
   l_mult_vec : t_vec2 = {x = (p_vec1.x * p_b.x) ; y = (p_vec2.y * p_b.y)} in
+=======
+  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec1.y * p_vec2.y)} in
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
   l_mult_vec;
 ;;
 
@@ -197,15 +214,17 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   @return Renvoie un vecteur qui résulte de la multiplication des composantes.
   @author Thomas CALBERAC
 *)
-
 let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
   let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_x) ; y = (p_vec1.y * p_y)} in
   l_mult_vec;
 ;;
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 (* Itération 2 *)
 type t_ball = unit;;
 
@@ -222,8 +241,17 @@ type t_paddle = unit;;
       <li>sa couleur : [t_camlbrick_color]</li>
     </ul>
 *)
+<<<<<<< HEAD
 type t_camlbrick = {brick_kind : t_brick_kind ; brick_color : t_camlbrick_color};;
 
+=======
+type t_camlbrick = 
+  { 
+  param : t_camlbrick_param ;(** paramètres de la partie *)
+  grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
+  }
+;;
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 
 (**
   Cette fonction construit le paramétrage du jeu, avec des informations personnalisable avec les contraintes du sujet.
@@ -259,11 +287,30 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 (**
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
   Une raquette par défaut et une balle par défaut dans la zone libre.
+  On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
+  
   @return Renvoie un jeu correctement initialisé
 *)
-let make_camlbrick() : t_camlbrick = 
+let make_camlbrick() : t_camlbrick =
+
   (* Itération 1, 2, 3 et 4 *)
+<<<<<<< HEAD
   ()
+=======
+
+  let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
+  let l_param : t_camlbrick_param = make_camlbrick_param() in
+  let l_grid : t_brick_kind array array = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_empty in
+  
+  for i = 0 to (l_param.world_width / l_param.brick_width) - 1
+  do
+    for j = 0 to (l_param.world_bricks_height / l_param.brick_height) - 1
+    do
+      l_grid.(i).(j) <- brick_kind.(Random.int(5))
+    done;
+  done;
+  {param = l_param ; grid = l_grid};
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 ;;
 
 
@@ -298,6 +345,19 @@ let string_of_gamestate(game : t_camlbrick) : string =
   "INCONNU"
 ;;
 
+<<<<<<< HEAD
+=======
+(**
+    fonction qui récupère une brique à des coordonnées données à 
+    partir d'une matrice de brique d'un partie
+
+    @param game représente le jeu en cours d'exécution.
+    @param i coordonnée y de la brique
+    @param j coordonnée x de la brique
+
+    @author Thomas CALBERAC
+*)
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   (* Itération 1 *)
   if i = 1 && j = 1
@@ -305,6 +365,7 @@ let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   else BK_simple 
 ;;
 
+<<<<<<< HEAD
 let brick_hit(game, i, j : t_camlbrick * int * int)  : t_brick_kind = 
   (* Itération 1 *)
   BK_empty
@@ -313,6 +374,45 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
 let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color = 
   (* Itération 1 *)
   ORANGE
+=======
+(**
+    fonction qui prend en paramètre une game et les coordonnées d'une brique et renvoi
+    la couleur de la brique.
+     <ul>
+      <li>Brique Block = Gris</li>
+      <li>Brique Vide = Noir (couleur du fond d'écran)</li>
+      <li>Brique Simple = Jaune</li>
+      <li>Brique Bonus = Rouge</li>
+      <li>Brique Double = Vert</li>
+    </ul>
+
+    @param game partie de type t_camlbrick
+    @param i coordonnée en y de la brique
+    @param j coordonnée en x de la brique
+    @return Renvoie la couleur de la brique
+
+    @author Thomas CALBERAC
+*)
+let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color = 
+  (* Itération 1 *)
+  if brick_get(game , i , j) = BK_block
+  then 
+    GRAY
+  else
+    if brick_get(game , i , j) = BK_empty
+      then 
+        BLACK
+      else
+        if brick_get(game , i , j) = BK_simple
+          then 
+            YELLOW
+          else
+            if brick_get(game , i , j) = BK_bonus
+              then 
+                RED
+              else
+                GREEN
+>>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 ;;
 
 
