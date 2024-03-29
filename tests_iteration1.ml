@@ -3,9 +3,6 @@ open Camlbrick ;;
 
 #mod_use "CPtest.ml" ;;
 open CPtest ;;
-(*
-===========================================================================================================
-*)
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
   Les entiers représentent la composante en X et en Y du vecteur exprimé 
