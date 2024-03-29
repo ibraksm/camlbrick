@@ -318,13 +318,20 @@ let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color =
 
 
 let paddle_x(game : t_camlbrick) : int= 
-paddle_x <- Left
-paddle_size_pixel <- brick_width 
+game.paddle.paddle_x;;
   (* Itération 2 *)
   0
 ;;
 
 let paddle_size_pixel(game : t_camlbrick) : int = 
+game.paddle.paddle_size in 
+if PS_SMALL 
+  then 50
+else if 
+  PS_MEDIUM 
+  then 100
+else 150 
+;;
   (* Itération 2 *)
   0
   brick_width;;
@@ -333,12 +340,20 @@ let paddle_size_pixel(game : t_camlbrick) : int =
 ;;
 
 let paddle_move_left(game : t_camlbrick) : unit = 
+if game.paddle.paddle_x - 5 
+;;
   (* Itération 2 *)
-paddle_move_left (camlbrick)
+
 ()
 ;;
 
 let paddle_move_right(game : t_camlbrick) : unit = 
+let paddle_width = paddle_size_pixel in 
+if game.paddle.paddle_x + paddle_width < game.param.world_width
+then game.paddle.paddle_x + 5
+;;
+
+
   (* Itération 2 *)
   paddle_move_right
   ()
