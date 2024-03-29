@@ -128,9 +128,10 @@ test_fonc_vec2_add_scalar();;
 
   let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = ... ;;
 
+  @author Nolan LAURIOUX
   @author Thomas CALBERAC
 *)
-let test_fonc_vec2_mutl() : unit =
+let test_fonc_vec2_mult() : unit =
   test_reset_report() ;
 
   (*On vérifie le cas où on multiplie deux vecteurs positifs *)
@@ -147,16 +148,16 @@ let test_fonc_vec2_mutl() : unit =
 
   (*On vérifie le cas où on multiplie par un vecteur nul*)
   let test_fonc_vec2_mult_nul() : unit = 
-    let l_res : t_vec2 t_test_result = test_exec(vec2_add , "vec2_add({x = -2 ; y = -4} , {x = 2 , y = 4})" , ({x = -2 ; y = -4} , {x = 2 ; y = 4})) in
+    let l_res : t_vec2 t_test_result = test_exec(vec2_mult , "vec2_mult({x = 0 ; y = 0} , {x = 2 , y = 4})" , ({x = 0 ; y = 0} , {x = 2 ; y = 4})) in
     assert_equals_result({x = 0 ; y = 0} , l_res)
   in
 
-  test_fonc_vec2_add_neg();
-  test_fonc_vec2_add_pos();
-  test_fonc_vec2_add_nul();
+  test_fonc_vec2_mult_neg();
+  test_fonc_vec2_mult_pos();
+  test_fonc_vec2_mult_nul();
   test_report() ;
 ;;
-test_fonc_vec2_add();;
+test_fonc_vec2_mult();;
 (*
 ===========================================================================================================
 *)
@@ -166,32 +167,468 @@ test_fonc_vec2_add();;
 
   let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 = ... ;; 
 
-  @author Thomas CALBERAC
+  @author Nolan LAURIOUX
 *)
 let test_fonc_vec2_mult_scalar() : unit =
   test_reset_report() ;
 
   (*On vérifie le cas où on multiplie deux vecteurs positifs *)
-  let test_fonc_vec2_mult_scalar() : unit = 
-    let l_res : t_vec2 t_test_result = test_exec(vec2_add_scalar , "vec2_add_scalar({x = 2 ; y = 2} , 4 , 5)" , ({x = 2 ; y = 2} , 4 , 5)) in
-    assert_equals_result({x = 6 ; y = 7} , l_res)
+  let test_fonc_vec2_mult_scalar_pos() : unit = 
+    let l_res : t_vec2 t_test_result = test_exec(vec2_mult_scalar , "vec2_mult_scalar({x = 2 ; y = 3} , 4 , 5)" , ({x = 2 ; y = 3} , 4 , 5)) in
+    assert_equals_result({x = 8 ; y = 15} , l_res)
   in
 
-   (*On vérifie le cas où on additionne deux vecteurs négatifs *)
-  let test_fonc_vec2_add_scalar_neg() : unit = 
-    let l_res : t_vec2 t_test_result = test_exec(vec2_add_scalar , "vec2_add_scalar({x = -2 ; y = -2} , -4 , -5)" , ({x = -2 ; y = -2} , -4 , -5)) in
-    assert_equals_result({x = -6 ; y = -7} , l_res)
+   (*On vérifie le cas où on multiplie deux vecteurs négatifs *)
+  let test_fonc_vec2_mult_scalar_neg() : unit = 
+    let l_res : t_vec2 t_test_result = test_exec(vec2_mult_scalar , "vec2_mult_scalar({x = -2 ; y = -3} , -4 , -5)" , ({x = -2 ; y = -3} , -4 , -5)) in
+    assert_equals_result({x = 8 ; y = 15} , l_res)
   in
 
   (*On vérifie le cas où on a un vecteur nul en résultat*)
-  let test_fonc_vec2_add_scalar_nul() : unit = 
-    let l_res : t_vec2 t_test_result = test_exec(vec2_add_scalar , "vec2_add_scalar({x = -2 ; y = -4} , 2 , 4)" , ({x = -2 ; y = -4} , 2 , 4)) in
+  let test_fonc_vec2_mult_scalar_nul() : unit = 
+    let l_res : t_vec2 t_test_result = test_exec(vec2_mult_scalar , "vec2_mult_scalar({x = 0 ; y = 3} , 4 , 0)" , ({x = 0 ; y = 3} , 4 , 0)) in
     assert_equals_result({x = 0 ; y = 0} , l_res)
   in
 
-  test_fonc_vec2_add_scalar_neg();
-  test_fonc_vec2_add_scalar_pos();
-  test_fonc_vec2_add_scalar_nul();
+  test_fonc_vec2_mult_scalar_neg();
+  test_fonc_vec2_mult_scalar_pos();
+  test_fonc_vec2_mult_scalar_nul();
   test_report();
 ;;
-test_fonc_vec2_add_scalar();;
+test_fonc_vec2_mult_scalar();;
+(*
+===========================================================================================================
+*)
+(** 
+  Cette fonction extrait le paramétrage d'un jeu à partir du jeu donné en argument.
+
+  let param_get(game : t_camlbrick) : t_camlbrick_param = ... ;; 
+
+  type t_camlbrick = 
+  { 
+  param : t_camlbrick_param ;
+  grid : t_brick_kind array array ;
+  }
+;;
+
+  @author Nolan LAURIOUX
+  @author Thomas CALBERAC
+*)
+let test_fonc_param_get() : unit = 
+  let l_res : t_camlbrick_param t_test_result = 
+    test_exec(
+      param_get , 
+      "param_get(
+        {
+          param = {
+            world_width = 800;
+            world_bricks_height = 600;
+            world_empty_height = 200;
+            brick_width = 40;
+            brick_height = 20;
+            paddle_init_width = 100;
+            paddle_init_height = 20;
+            time_speed = ref 20;
+            } ; 
+          grid = [| [| BK_bonus |] ; [| BK_bonus |] |] )
+        } " , 
+      (
+        {
+          param = {
+            world_width = 800;
+            world_bricks_height = 600;
+            world_empty_height = 200;
+   
+            brick_width = 40;
+            brick_height = 20;
+   
+            paddle_init_width = 100;
+            paddle_init_height = 20;
+   
+            time_speed = ref 20;
+            } ;
+          grid = [| [| BK_bonus |] ; [| BK_bonus |] |] 
+        }
+      )
+    )
+  in
+  assert_equals_result(
+    {
+    world_width = 800;
+    world_bricks_height = 600;
+    world_empty_height = 200;
+
+    brick_width = 40;
+    brick_height = 20;
+
+    paddle_init_width = 100;
+    paddle_init_height = 20;
+
+    time_speed = ref 20;
+    } , 
+    l_res);
+;;
+test_fonc_param_get();;
+test_report();;
+test_reset_report();;
+(*
+===========================================================================================================
+*)
+(**
+  fonction qui récupère une brique à des coordonnées données à 
+  partir d'une matrice de brique d'un partie
+    
+  let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind = ... ;;
+    
+  @author Nolan LAURIOUX
+*)  
+let test_fonc_brick_get() : unit = 
+  let l_res : t_brick_kind t_test_result = 
+    test_exec(
+      brick_get , 
+      "brick_get(
+        {
+          param = {
+            world_width = 800;
+            world_bricks_height = 600;
+            world_empty_height = 200;
+            brick_width = 40;
+            brick_height = 20;
+            paddle_init_width = 100;
+            paddle_init_height = 20;
+            time_speed = ref 20;
+            } ; 
+            grid = 
+            [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                [| BK_bonus ; BK_bonus ; BK_empty |] |] 
+          }   
+        } ,
+        2 ,
+        2 " , 
+      (
+        {
+          param = {
+            world_width = 800;
+            world_bricks_height = 600;
+            world_empty_height = 200;
+   
+            brick_width = 40;
+            brick_height = 20;
+   
+            paddle_init_width = 100;
+            paddle_init_height = 20;
+   
+            time_speed = ref 20;
+            } ;
+          grid = 
+          [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+              [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+              [| BK_bonus ; BK_bonus ; BK_empty |] |] 
+        } ,
+        2 ,
+        2
+      )
+    )
+  in
+  assert_equals_result(BK_empty , l_res);
+;;
+test_fonc_brick_get();;
+test_report();;
+
+(*
+===========================================================================================================
+*)
+
+(**
+let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
+fonction qui prend en paramètre une game et les coordonnées d'une brique et renvoi
+    la couleur de la brique.
+     <ul>
+      <li>Brique Block = Gris</li>
+      <li>Brique Vide = Noir (couleur du fond d'écran)</li>
+      <li>Brique Simple = Jaune</li>
+      <li>Brique Bonus = Rouge</li>
+      <li>Brique Double = Vert</li>
+    </ul>
+
+@author Nolan LAURIOUX
+*)
+let test_fonc_brick_color() : unit =
+
+  test_reset_report() ;
+
+  let test_fonc_brick_color_black() : unit = 
+    let l_res : t_camlbrick_color t_test_result = 
+      test_exec(
+        brick_color , 
+        "brick_color(
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+              brick_width = 40;
+              brick_height = 20;
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+              time_speed = ref 20;
+              } ; 
+              grid = 
+              [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                  [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                  [| BK_bonus ; BK_bonus ; BK_empty |] |] 
+            }   
+          } ,
+          2 ,
+          2 " , 
+        (
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+    
+              brick_width = 40;
+              brick_height = 20;
+    
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+    
+              time_speed = ref 20;
+              } ;
+            grid = 
+            [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                [| BK_bonus ; BK_bonus ; BK_empty |] |] 
+          } ,
+          2 ,
+          2
+        )
+      )
+    in
+    assert_equals_result(BLACK , l_res);
+  in
+
+  let test_fonc_brick_color_yellow() : unit = 
+    let l_res : t_camlbrick_color t_test_result = 
+      test_exec(
+        brick_color , 
+        "brick_color(
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+              brick_width = 40;
+              brick_height = 20;
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+              time_speed = ref 20;
+              } ; 
+              grid = 
+              [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                  [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                  [| BK_bonus ; BK_bonus ; BK_simple |] |] 
+            }   
+          } ,
+          2 ,
+          2 " , 
+        (
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+      
+              brick_width = 40;
+              brick_height = 20;
+      
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+      
+              time_speed = ref 20;
+              } ;
+            grid = 
+            [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                [| BK_bonus ; BK_bonus ; BK_simple |] |] 
+          } ,
+          2 ,
+          2
+        )
+      )
+    in
+    assert_equals_result(YELLOW , l_res);
+  in
+
+  let test_fonc_brick_color_green() : unit = 
+    let l_res : t_camlbrick_color t_test_result = 
+      test_exec(
+        brick_color , 
+        "brick_color(
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+              brick_width = 40;
+              brick_height = 20;
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+              time_speed = ref 20;
+              } ; 
+              grid = 
+              [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                  [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                  [| BK_bonus ; BK_bonus ; BK_double |] |] 
+            }   
+          } ,
+          2 ,
+          2 " , 
+        (
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+      
+              brick_width = 40;
+              brick_height = 20;
+      
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+      
+              time_speed = ref 20;
+              } ;
+            grid = 
+            [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                [| BK_bonus ; BK_bonus ; BK_double |] |] 
+          } ,
+          2 ,
+          2
+        )
+      )
+    in
+    assert_equals_result(GREEN , l_res);
+  in
+
+  let test_fonc_brick_color_gray() : unit = 
+    let l_res : t_camlbrick_color t_test_result = 
+      test_exec(
+        brick_color , 
+        "brick_color(
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+              brick_width = 40;
+              brick_height = 20;
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+              time_speed = ref 20;
+              } ; 
+              grid = 
+              [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                  [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                  [| BK_bonus ; BK_bonus ; BK_block |] |] 
+            }   
+          } ,
+          2 ,
+          2 " , 
+        (
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+      
+              brick_width = 40;
+              brick_height = 20;
+      
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+      
+              time_speed = ref 20;
+              } ;
+            grid = 
+            [|  [| BK_bonus ; BK_bonus ; BK_bonus |] ; 
+                [| BK_bonus ; BK_bonus ; BK_bonus |] ;
+                [| BK_bonus ; BK_bonus ; BK_block |] |] 
+          } ,
+          2 ,
+          2
+        )
+      )
+    in
+    assert_equals_result(GRAY , l_res);
+  in
+
+  let test_fonc_brick_color_red() : unit = 
+    let l_res : t_camlbrick_color t_test_result = 
+      test_exec(
+        brick_color , 
+        "brick_color(
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+              brick_width = 40;
+              brick_height = 20;
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+              time_speed = ref 20;
+              } ; 
+              grid = 
+              [|  [| BK_simple ; BK_simple ; BK_simple |] ; 
+                  [| BK_simple ; BK_simple ; BK_simple |] ;
+                  [| BK_simple ; BK_simple ; BK_bonus |] |] 
+            }   
+          } ,
+          2 ,
+          2 " , 
+        (
+          {
+            param = {
+              world_width = 800;
+              world_bricks_height = 600;
+              world_empty_height = 200;
+      
+              brick_width = 40;
+              brick_height = 20;
+      
+              paddle_init_width = 100;
+              paddle_init_height = 20;
+      
+              time_speed = ref 20;
+              } ;
+            grid = 
+            [|  [| BK_simple ; BK_simple ; BK_simple |] ; 
+                [| BK_simple ; BK_simple ; BK_simple |] ;
+                [| BK_simple ; BK_simple ; BK_bonus |] |] 
+          } ,
+          2 ,
+          2
+        )
+      )
+    in
+    assert_equals_result(RED , l_res);
+  in
+
+  test_fonc_brick_color_black();
+  test_fonc_brick_color_yellow();
+  test_fonc_brick_color_green();
+  test_fonc_brick_color_gray();
+  test_fonc_brick_color_red();
+  test_report();
+  
+;;
+test_fonc_brick_color();;
+
+
+
+  
+

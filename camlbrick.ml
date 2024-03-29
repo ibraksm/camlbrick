@@ -185,7 +185,7 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
   (* Itération 1 *)
-  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec2.y * p_vec2.y)} in
+  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec1.y * p_vec2.y)} in
   l_mult_vec;
 ;;
 
@@ -233,9 +233,9 @@ type t_paddle = unit;;
   @author Thomas CALBERAC
 *)
 type t_camlbrick = 
-  { (** paramètres de la partie *)
-  param : t_camlbrick_param ;
-  grid : t_brick_kind array array ; (** matrice contenant toutes les briques *)
+  { 
+  param : t_camlbrick_param ;(** paramètres de la partie *)
+  grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
   }
 ;;
 
@@ -275,6 +275,8 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 (**
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
   Une raquette par défaut et une balle par défaut dans la zone libre.
+  On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
+  
   @return Renvoie un jeu correctement initialisé
 
   @author Thomas CALBERAC
@@ -328,7 +330,7 @@ let string_of_gamestate(game : t_camlbrick) : string =
 
 (**
     fonction qui récupère une brique à des coordonnées données à 
-    partir d'une game
+    partir d'une matrice de brique d'un partie
 
     @param game représente le jeu en cours d'exécution.
     @param i coordonnée y de la brique
@@ -379,8 +381,8 @@ let brick_hit(game, i, j : t_camlbrick * int * int)  : unit =
     fonction qui prend en paramètre une game et les coordonnées d'une brique et renvoi
     la couleur de la brique.
      <ul>
-      <li>Brique Block = Noire</li>
-      <li>Brique Vide = Gris (couleur du fond d'écran)</li>
+      <li>Brique Block = Gris</li>
+      <li>Brique Vide = Noir (couleur du fond d'écran)</li>
       <li>Brique Simple = Jaune</li>
       <li>Brique Bonus = Rouge</li>
       <li>Brique Double = Vert</li>
@@ -397,11 +399,11 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
   (* Itération 1 *)
   if brick_get(game , i , j) = BK_block
   then 
-    BLACK
+    GRAY
   else
     if brick_get(game , i , j) = BK_empty
       then 
-        GRAY
+        BLACK
       else
         if brick_get(game , i , j) = BK_simple
           then 
