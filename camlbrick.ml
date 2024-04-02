@@ -281,38 +281,17 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 ;;
 
 (**
-  Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
-  Une raquette par défaut et une balle par défaut dans la zone libre.
-  On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
-  
-  @return Renvoie un jeu correctement initialisé
-*)
-let make_camlbrick() : t_camlbrick =
-
-  (* Itération 1, 2, 3 et 4 *)
-
-  let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
-  let l_param : t_camlbrick_param = make_camlbrick_param() in
-  let l_grid : t_brick_kind array array = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_empty in
-  
-  for i = 0 to (l_param.world_width / l_param.brick_width) - 1
-  do
-    for j = 0 to (l_param.world_bricks_height / l_param.brick_height) - 1
-    do
-      l_grid.(i).(j) <- brick_kind.(Random.int(5))
-    done;
-  done;
-  {param = l_param ; grid = l_grid};
-;;
-
-
-(**
   Cette fonction crée une raquette par défaut au milieu de l'écran et de taille normal.  
   @deprecated Cette fonction est là juste pour le debug ou pour débuter certains traitements de test.
 *)
 let make_paddle() : t_paddle =
   (* Itération 2 *)
- ()
+  {
+    height = 1 ;
+    width = 3 ; 
+    x = 5 ;
+    y = 5 ;
+  }
 ;;
 
 let make_ball(x,y, size : int * int * int) : t_ball =
@@ -401,30 +380,32 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
 *)
 let paddle_x(game : t_camlbrick) : int= 
   (* Itération 2 *)
-  let left_paddle_x : int = (game.paddle.x) - (game.paddle.paddle_init_width / 2) in
+  let left_paddle_x : int = (game.paddle.x) - (game.paddle.width / 2) in
   left_paddle_x ; 
 ;;
 
 let paddle_size_pixel(game : t_camlbrick) : int = 
   (* Itération 2 *)
-  ()
+  0
 ;;
 
 let paddle_move_left(game : t_camlbrick) : unit = 
   (* Itération 2 *)
   ()
 ;;
-let paddle_move_right():
+let paddle_move_right(game : t_camlbrick) : unit =
   (* Itération 2 *)
+  ()
  ;;
 
 let has_ball(game : t_camlbrick) : bool =
   (* Itération 2 *)
-
+ false
 ;;
 
 let balls_count(game : t_camlbrick) : int =
   (* Itération 2 *)
+  0
 ;;
 
 let balls_get(game : t_camlbrick) : t_ball list = 
@@ -663,7 +644,30 @@ let speed_change(game,xspeed : t_camlbrick * int) : unit=
   print_endline("Change speed : "^(string_of_int xspeed));
 ;;
 
+(**
+  Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
+  Une raquette par défaut et une balle par défaut dans la zone libre.
+  On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
+  
+  @return Renvoie un jeu correctement initialisé
+*)
+let make_camlbrick() : t_camlbrick =
 
+  (* Itération 1, 2, 3 et 4 *)
+
+  let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
+  let l_param : t_camlbrick_param = make_camlbrick_param() in
+  let l_grid : t_brick_kind array array = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_empty in
+  
+  for i = 0 to (l_param.world_width / l_param.brick_width) - 1
+  do
+    for j = 0 to (l_param.world_bricks_height / l_param.brick_height) - 1
+    do
+      l_grid.(i).(j) <- brick_kind.(Random.int(5))
+    done;
+  done;
+  {param = l_param ; grid = l_grid ; gamestate = PLAYING ; paddle = make_paddle() ; ball = ()};
+;;
 
 let animate_action(game : t_camlbrick) : unit =  
   (* Iteration 1,2,3 et 4
