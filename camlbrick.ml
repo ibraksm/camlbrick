@@ -11,8 +11,8 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 
 @author Nolan LAURIOUX
 @author Thomas CALBERAC
-@author ...
-@author ...
+@author Ibraguim KARSAMOV
+@author Manal ALOUANI
 
 @version 1
 *)
@@ -206,7 +206,17 @@ let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 ;;
 
 (* Itération 2 *)
-type t_ball = unit;;
+(**
+Type t_ball avec position exprimée par un vecteur,
+sa taille définie par une des tailles du type t_ball_size,
+et son vecteur vitesse exprimé en vecteur 2D
+@author Ibraguim KARSAMOV
+*)
+type t_ball = {
+  position : t_vec2;
+  size : t_ball_size;
+  speed_vec : t_vec2;
+};;
 
 
 
@@ -245,7 +255,7 @@ type t_camlbrick =
   grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
   gamestate : t_gamestate ;(** état de la partie *)
   paddle : t_paddle ;(** raquette *)
-  ball : t_ball ;(** balle *)
+  balls : (t_ball list * int) ;(** balle *)
   }
 ;;
 
@@ -398,55 +408,111 @@ let paddle_move_right(game : t_camlbrick) : unit =
   ()
  ;;
 
+(**
+La fonction regarde si le nombre de balles est supérieur
+à 0. Si oui, elle renvoit vrai, sinon faux.
+@author Ibraguim KARSAMOV
+*)
 let has_ball(game : t_camlbrick) : bool =
   (* Itération 2 *)
- false
+ if snd(game.balls) > 0 then true
+ else false
 ;;
 
+(**
+La fonction renvoi le nombre de balles depuis le tuple balls
+@author Ibraguim KARSAMOV
+*)
 let balls_count(game : t_camlbrick) : int =
   (* Itération 2 *)
-  0
+  snd(game.balls)
 ;;
 
+(**
+La fonciton renvoi la liste des balles depuis le tuple balls
+@author Ibraguim KARSAMOV
+*)
 let balls_get(game : t_camlbrick) : t_ball list = 
   (* Itération 2 *)
-  []
+  fst(game.balls)
 ;;
 
+(**
+La fonction renvoie la ième balle de la liste fst(game.balls)
+@author Ibraguim KARSAMOV
+*)
 let ball_get(game, i : t_camlbrick * int) : t_ball =
   (* Itération 2 *)
-  ()
+  List.nth fst(game.balls) i
 ;;
 
+(**
+Renvoi l'abscisse d'une balle
+@author Ibraguim KARSAMOV
+*)
 let ball_x(game,ball : t_camlbrick * t_ball) : int =
   (* Itération 2 *)
-  0
+  ball.position.x
 ;;
 
+(**
+Renvoi l'ordonné d'une balle
+@author Ibraguim KARSAMOV
+*)
 let ball_y(game, ball : t_camlbrick * t_ball) : int =
   (* Itération 2 *)
-  0
+  ball.position.y
 ;;
 
+(**
+Donne un diamètre en fonction de la taille d'une balle.
+@author Ibraguim KARSAMOV
+*)
 let ball_size_pixel(game, ball : t_camlbrick * t_ball) : int =
   (* Itération 2 *)
-  0
+  if ball.size = BS_SMALL
+  then 3
+  else
+    if ball.size = BS_MEDIUM
+    then 5
+    else 10 
 ;;
 
+(**
+Renvoi une couleur en fonction de la taille d'une balle.
+@author Ibraguim KARSAMOV
+*)
 let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
   (* Itération 2 *)
-  GRAY
+  if ball.size = BS_SMALL
+  then WHITE
+  else
+    if ball.size = BS_MEDIUM
+    then ORANGE
+    else RED  
 ;;
-
+(**
+Fait accumuler la vitesse d'une balle avec dv par addition
+@author Ibraguim KARSAMOV
+*)
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
   (* Itération 3 *)
-  ()
+  ball.speed_vec = {
+    x = ball.speed_vec.x + dv.x ;
+    y = ball.speed_vec.y + dv.y
+  }
 ;;
 
-
+(**
+Multiplie la vitesse d'une balle par le vecteur sv
+@author Ibraguim KARSAMOV
+*)
 let ball_modif_speed_sign(game, ball, sv : t_camlbrick * t_ball * t_vec2) : unit =
   (* Itération 3 *)
-  ()
+  ball.speed_vec = {
+    x = ball.speed_vec.x * sv.x ;
+    y = ball.speed_vec.y * sv.y
+  }
 ;;
 
 let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
