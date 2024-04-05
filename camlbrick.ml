@@ -111,7 +111,7 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
     Les composantes x et y sont des entiers.
     @author Thomas CALBERAC
 *)
-type t_vec2 = {x : int ; y : int};;
+type t_vec2 = {x : int ref; y : int ref};;
 
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
@@ -124,7 +124,7 @@ type t_vec2 = {x : int ; y : int};;
 
   @author Thomas CALBERAC
 *)
-let make_vec2(p_x , p_y : int * int) : t_vec2 = 
+let make_vec2(p_x , p_y : int ref * int ref) : t_vec2 = 
   (* Itération 1 *)
   let l_vec : t_vec2 = {x = p_x ; y = p_y} in
   l_vec;
@@ -140,7 +140,7 @@ let make_vec2(p_x , p_y : int * int) : t_vec2 =
 *)
 let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
   (* Itération 1 *)
-  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_vec2.x) ; y = (p_vec1.y + p_vec2.y)} in
+  let l_sum_vec : t_vec2 = {x = ref (!(p_vec1.x) + !(p_vec2.x)); y = ref (!(p_vec1.y) + !(p_vec2.y))} in
   l_sum_vec;
 ;;
 
@@ -162,7 +162,7 @@ let vec2_add_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
-  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_x) ; y = (p_vec1.y + p_y)} in
+  let l_sum_vec : t_vec2 = {x = ref (!(p_vec1.x) + p_x) ; y = ref (!(p_vec1.y) + p_y)} in
   l_sum_vec;
 ;;
 
@@ -181,7 +181,7 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
   (* Itération 1 *)
-  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec1.y * p_vec2.y)} in
+  let l_mult_vec : t_vec2 = {x = ref (!(p_vec1.x) * !(p_vec2.x)) ; y = ref (!(p_vec1.y) * !(p_vec2.y))} in
   l_mult_vec;
 ;;
 
@@ -201,7 +201,7 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   (* Itération 1 *)
-  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_x) ; y = (p_vec1.y * p_y)} in
+  let l_mult_vec : t_vec2 = {x = ref (!(p_vec1.x) * p_x) ; y = ref (!(p_vec1.y) * p_y)} in
   l_mult_vec;
 ;;
 
@@ -215,7 +215,7 @@ et son vecteur vitesse exprimé en vecteur 2D
 type t_ball = {
   position : t_vec2;
   size : t_ball_size;
-  speed_vec : t_vec2;
+  speed_vec : t_vec2 ref;
 };;
 
 
@@ -255,7 +255,7 @@ type t_camlbrick =
   grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
   gamestate : t_gamestate ;(** état de la partie *)
   paddle : t_paddle ;(** raquette *)
-  balls : (t_ball list * int) ;(** balle *)
+  balls : (t_ball list * int) ;(** balles *)
   }
 ;;
 
@@ -306,7 +306,7 @@ let make_paddle() : t_paddle =
 
 let make_ball(x,y, size : int * int * int) : t_ball =
   (* Itération 3 *)
-  ()
+  {position = {x = ref 1 ; y = ref 1} ; size = BS_MEDIUM ; speed_vec = ref {x = ref 1 ; y = ref 1}}
 ;;
 
 
@@ -443,7 +443,8 @@ La fonction renvoie la ième balle de la liste fst(game.balls)
 *)
 let ball_get(game, i : t_camlbrick * int) : t_ball =
   (* Itération 2 *)
-  List.nth fst(game.balls) i
+  let l_list = fst game.balls in
+  List.nth l_list i
 ;;
 
 (**
@@ -452,7 +453,7 @@ Renvoi l'abscisse d'une balle
 *)
 let ball_x(game,ball : t_camlbrick * t_ball) : int =
   (* Itération 2 *)
-  ball.position.x
+  !(ball.position.x)
 ;;
 
 (**
@@ -461,7 +462,7 @@ Renvoi l'ordonné d'une balle
 *)
 let ball_y(game, ball : t_camlbrick * t_ball) : int =
   (* Itération 2 *)
-  ball.position.y
+  !(ball.position.y)
 ;;
 
 (**
@@ -497,9 +498,10 @@ Fait accumuler la vitesse d'une balle avec dv par addition
 *)
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
   (* Itération 3 *)
-  ball.speed_vec = {
-    x = ball.speed_vec.x + dv.x ;
-    y = ball.speed_vec.y + dv.y
+  let l_ball_speed = !(ball.speed_vec) in
+  ball.speed_vec := {
+    x = ref (!(l_ball_speed.x) + !(dv.x)) ;
+    y = ref (!(l_ball_speed.y) + !(dv.y))
   }
 ;;
 
@@ -509,9 +511,10 @@ Multiplie la vitesse d'une balle par le vecteur sv
 *)
 let ball_modif_speed_sign(game, ball, sv : t_camlbrick * t_ball * t_vec2) : unit =
   (* Itération 3 *)
-  ball.speed_vec = {
-    x = ball.speed_vec.x * sv.x ;
-    y = ball.speed_vec.y * sv.y
+  let l_ball_speed = !(ball.speed_vec) in
+  ball.speed_vec := {
+    x = ref (!(l_ball_speed.x) * !(sv.x)) ;
+    y = ref (!(l_ball_speed.y) * !(sv.y))
   }
 ;;
 
@@ -732,7 +735,7 @@ let make_camlbrick() : t_camlbrick =
       l_grid.(i).(j) <- brick_kind.(Random.int(5))
     done;
   done;
-  {param = l_param ; grid = l_grid ; gamestate = PLAYING ; paddle = make_paddle() ; ball = ()};
+  {param = l_param ; grid = l_grid ; gamestate = PLAYING ; paddle = make_paddle() ; balls = ([make_ball(1, 1, 5)], 1)};
 ;;
 
 let animate_action(game : t_camlbrick) : unit =  
