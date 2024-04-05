@@ -102,24 +102,12 @@ type t_paddle_size = PS_SMALL | PS_MEDIUM | PS_BIG;;
 *)
 type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 
-
-
-
-
 (**
     Type structuré d'un vecteur 2D.
-    Les composantes x et y sont des entiers.
+    Les composantes x et y sont des entiers ref.
     @author Thomas CALBERAC
 *)
 type t_vec2 = {x : int ref; y : int ref};;
-
-(**
-    Type structuré pour la position d'un élément
-    avec x pour la coordonnée horizontale et y pour la coordonnée verticale
-
-    @author Thomas CALBERAC
-*)
-type t_position = { x : int ref ; y : int ref} ;; 
 
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
@@ -215,24 +203,15 @@ let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 ;;
 
 (**
-  Type d'une balle 
+  Type d'une balle
+  @author Ibraguim KARSAMOV
 *)
 type t_ball = {
   position : t_vec2;
   size : t_ball_size;
   speed_vec : t_vec2 ref;
-};;
-
-(* Itération 2 *)
-
-  {
-    position : t_position ;(** position de la balle *)
-    size : t_ball_size ;(** taille de la balle *)
-    speed : t_vec2(** vitesse de la balle *)
-  }
+}
 ;;
-
-
 
 (** 
   type de la raquette de jeu
@@ -265,7 +244,7 @@ type t_camlbrick =
   grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
   gamestate : t_gamestate ;(** état de la partie *)
   paddle : t_paddle ;(** raquette *)
-  balls : (t_ball list * int) ;(** balles *)
+  balls : t_ball list ;(** balles *)
   }
 ;;
 
@@ -321,9 +300,12 @@ let make_paddle() : t_paddle =
 ;;
 
 let make_ball() : t_ball =
-
   (* Itération 3 *)
-  {position = {x = ref 1 ; y = ref 1} ; size = BS_MEDIUM ; speed_vec = ref {x = ref 1 ; y = ref 1}}
+  {
+  position = {x = ref 0 ; y = ref 0} ;
+  size = BS_MEDIUM ;
+  speed_vec = ref {x = ref 0 ; y = ref 0}
+  }
 ;;
 (**
   Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
@@ -529,9 +511,7 @@ let paddle_move_right(game : t_camlbrick) : unit =
   @author Thomas CALBERAC
 *)
 let has_ball(game : t_camlbrick) : bool =
-
   (* Itération 2 *)
-
   if game.balls = [] 
   then 
     false
@@ -549,9 +529,7 @@ let has_ball(game : t_camlbrick) : bool =
   @author Thomas CALBERAC
 *)
 let balls_count(game : t_camlbrick) : int =
-
   (* Itération 2 *)
-
   List.length(game.balls)
 ;;
 
@@ -575,10 +553,11 @@ let balls_get(game : t_camlbrick) : t_ball list =
   @return Renvoie la balle du rang i
 
   @author Thomas CALBERAC
+  @author Ibraguim KARSAMOV
 *)
 let ball_get(game, i : t_camlbrick * int) : t_ball =
   (* Itération 2 *)
-  let l_list = fst game.balls in
+  let l_list = game.balls in
   List.nth l_list i
 ;;
 
@@ -601,7 +580,7 @@ let ball_x(game , ball : t_camlbrick * t_ball) : int =
   do
     if ball_get(game , i) = ball
     then
-      l_res := !((List.nth (game.balls) (i)).position.x) 
+      l_res := !(((List.nth (game.balls)) (i)).position.x) 
     else
       ()
   done;
@@ -627,7 +606,7 @@ let ball_y(game, ball : t_camlbrick * t_ball) : int =
   do
     if ball_get(game , i) = ball
     then
-      l_res := !((List.nth (game.balls) (i)).position.y)
+      l_res := !(((List.nth (game.balls)) (i)).position.y)
     else
       ()
   done;
@@ -711,6 +690,7 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
   !l_res;
 
 ;;
+
 (**
 Fait accumuler la vitesse d'une balle avec dv par addition
 @author Ibraguim KARSAMOV
@@ -964,7 +944,7 @@ let make_camlbrick() : t_camlbrick =
       l_grid.(i).(j) <- brick_kind.(Random.int(5))
     done;
   done;
-  {param = l_param ; grid = l_grid ; gamestate = PLAYING ; paddle = make_paddle() ; balls = ([make_ball(1, 1, 5)], 1)};
+  {param = l_param ; grid = l_grid ; gamestate = PLAYING ; paddle = make_paddle() ; balls = ([make_ball()])};
 ;;
 
 let animate_action(game : t_camlbrick) : unit =  
