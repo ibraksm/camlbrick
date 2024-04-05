@@ -716,49 +716,90 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
 
 ;;
 (**
-Fait accumuler la vitesse d'une balle avec dv par addition
-@author Ibraguim KARSAMOV
+  fonction qui modifie la vitesse d'une balle par addition
+
+  @param game partie en cours
+  @param balle pour laquelle on modifie la vitesse
+  @param dv vecteur que l'on va additionner à la balle
+  @return Ne renvoie rien fonction qui modifie le vecteur vitesse de la balle uniquement
+
+  @author Thomas CALBERAC
 *)
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
+
   (* Itération 3 *)
-  ball.speed_vec = {
-    x = ball.speed_vec.x + dv.x ;
-    y = ball.speed_vec.y + dv.y
-  }
+
+  for i = 0 to List.length(game.balls) - 1
+  do
+    if List.nth (game.balls) (i) = ball
+    then
+      (List.nth (game.balls) (i)).speed := vec2_add(!((List.nth (game.balls) (i)).speed) , !dv)
+    else
+      ()
+  done;
 ;;
 
 (**
-Multiplie la vitesse d'une balle par le vecteur sv
-@author Ibraguim KARSAMOV
+  fonction qui modifie la vitesse d'une balle par multiplication
+
+  @param game partie en cours
+  @param balle pour laquelle on modifie la vitesse
+  @param dv vecteur que l'on va multiplier à la balle
+  @return Ne renvoie rien fonction qui modifie le vecteur vitesse de la balle uniquement
+
+  @author Thomas CALBERAC
 *)
 let ball_modif_speed_sign(game, ball, sv : t_camlbrick * t_ball * t_vec2) : unit =
+
   (* Itération 3 *)
-  ball.speed_vec = {
-    x = ball.speed_vec.x * sv.x ;
-    y = ball.speed_vec.y * sv.y
-  }
+
+  for i = 0 to List.length(game.balls) - 1
+  do
+    if List.nth (game.balls) (i) = ball
+    then
+      (List.nth (game.balls) (i)).speed := vec2_mult(!((List.nth (game.balls) (i)).speed) , !dv)
+    else
+      ()
+  done;
 ;;
 
+(**
+  fonction qui vérifie si un point est dans un cercle
+
+  @param cx coordonnée horizontale du centre du cercle
+  @param cy coordonnée verticale du centre du cercle
+  @param rad rayon du cercle 
+  @param x coordonnée horizontale du point
+  @param y coordonnée verticale du centre du cercle
+  @return Renvoie vrai si le point est dans le cercle et faux dans le cas contraire
+
+  @author Thomas CALBERAC
+*)
 let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
+
   (* Itération 3 *)
-  false
+  
+  (x - cx) * (x - cx) + (y - cy) * (y - cy) <= rad * rad
 ;;
 
 let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool =
+
   (* Itération 3 *)
-  false
+
+  (x1 <= x) && (x <= x2) && (y1 <= y) && (y <= y2)
 ;;
 
-
-
+(* cette fonction va prendre 5 ans avant d'être finie par NOLAN LAURIOUX *)
 let ball_remove_out_of_border(game,balls : t_camlbrick * t_ball list ) : t_ball list = 
   (* Itération 3 *)
   balls
 ;;
 
 let ball_hit_paddle(game,ball,paddle : t_camlbrick * t_ball * t_paddle) : unit =
+
   (* Itération 3 *)
-  ()
+
+  
 ;;
 
 
