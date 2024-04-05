@@ -782,6 +782,16 @@ let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
   (x - cx) * (x - cx) + (y - cy) * (y - cy) <= rad * rad
 ;;
 
+
+(**
+  fonction qui vérifie si un point est dans un cercle
+
+  @param x1 coordonnée horizontale du coin gauche du rectangle
+  @param y1 coordonnée horizontale du coin gauche du rectangle
+  @return Renvoie vrai si le point est dans le cercle et faux dans le cas contraire
+
+  @author Thomas CALBERAC
+*)
 let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool =
 
   (* Itération 3 *)
