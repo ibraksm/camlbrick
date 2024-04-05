@@ -50,7 +50,7 @@ type t_camlbrick_param = {
   brick_width : int; (** largeur d'une brique *)
   brick_height : int; (** hauteur d'une brique *)
 
-  paddle_init_width : int; (** largeur initiale de la raquette *)
+  paddle_init_width : int ; (** largeur initiale de la raquette *)
   paddle_init_height : int; (** hauteur initiale de la raquette *)
 
   time_speed : int ref; (** indique l'écoulement du temps en millisecondes (c'est une durée approximative) *)
@@ -104,7 +104,7 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 
 
 
-(* Itération 1 *)
+
 
 (**
     Type structuré d'un vecteur 2D.
@@ -112,6 +112,14 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
     @author Thomas CALBERAC
 *)
 type t_vec2 = {x : int ref; y : int ref};;
+
+(**
+    Type structuré pour la position d'un élément
+    avec x pour la coordonnée horizontale et y pour la coordonnée verticale
+
+    @author Thomas CALBERAC
+*)
+type t_position = { x : int ref ; y : int ref} ;; 
 
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
@@ -197,6 +205,7 @@ let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   @param p_x composante x du second vecteur
   @param p_y composante y du second vecteur
   @return Renvoie un vecteur qui résulte de la multiplication des composantes.
+
   @author Thomas CALBERAC
 *)
 let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
@@ -205,12 +214,8 @@ let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   l_mult_vec;
 ;;
 
-(* Itération 2 *)
 (**
-Type t_ball avec position exprimée par un vecteur,
-sa taille définie par une des tailles du type t_ball_size,
-et son vecteur vitesse exprimé en vecteur 2D
-@author Ibraguim KARSAMOV
+  Type d'une balle 
 *)
 type t_ball = {
   position : t_vec2;
@@ -218,29 +223,29 @@ type t_ball = {
   speed_vec : t_vec2 ref;
 };;
 
-
-
-(** 
-  type de la raquette de jeu :
-    height : la hauteur en pixel de la raquette
-    width : la largeur en pixel de la raquette
-    x : la coordonnée horizontale du centre de la raquette
-    y : la coordonnée verticale du centre de la raquette
-
-    @author Thomas CALBERAC
-*)
-type t_paddle = 
 (* Itération 2 *)
+
   {
-    height : int ;
-    width : int ; 
-    x : int ;
-    y : int ;
+    position : t_position ;(** position de la balle *)
+    size : t_ball_size ;(** taille de la balle *)
+    speed : t_vec2(** vitesse de la balle *)
   }
 ;;
 
 
-(* Itération 1, 2, 3 et 4 *)
+
+(** 
+  type de la raquette de jeu
+  @author Thomas CALBERAC
+*)
+type t_paddle = 
+
+(* Itération 2 *)
+  {
+    size : t_paddle_size ;(** taille de la raquette *)
+    position : t_position (** position de la raquette *)
+  }
+;;
 
 (**
     type structuré d'une brique définie par :
@@ -248,8 +253,13 @@ type t_paddle =
       <li>son type : [t_brick_kind]</li>
       <li>sa couleur : [t_camlbrick_color]</li>
     </ul>
+
+    @author Thomas CALBERAC
 *)
 type t_camlbrick = 
+
+(* Itération 1, 2, 3 et 4 *)
+
   { 
   param : t_camlbrick_param ;(** paramètres de la partie *)
   grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
@@ -284,33 +294,69 @@ let make_camlbrick_param() : t_camlbrick_param = {
   Cette fonction extrait le paramétrage d'un jeu à partir du jeu donné en argument.
   @param game jeu en cours d'exécution.
   @return Renvoie le paramétrage actuel.
+
+  @author Thomas CALBERAC
   *)
 let param_get(game : t_camlbrick) : t_camlbrick_param =
+
   (* Itération 1 *)
-  make_camlbrick_param()
+
+  game.param
 ;;
 
 (**
   Cette fonction crée une raquette par défaut au milieu de l'écran et de taille normal.  
   @deprecated Cette fonction est là juste pour le debug ou pour débuter certains traitements de test.
+
+  @author Thomas CALBERAC
 *)
 let make_paddle() : t_paddle =
+
   (* Itération 2 *)
+
   {
-    height = 1 ;
-    width = 3 ; 
-    x = 5 ;
-    y = 5 ;
+    size = PS_SMALL ;
+    position = {x = ref 0  ; y = ref 0}
   }
 ;;
 
-let make_ball(x,y, size : int * int * int) : t_ball =
+let make_ball() : t_ball =
+
   (* Itération 3 *)
   {position = {x = ref 1 ; y = ref 1} ; size = BS_MEDIUM ; speed_vec = ref {x = ref 1 ; y = ref 1}}
 ;;
+(**
+  Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
+  Une raquette par défaut et une balle par défaut dans la zone libre.
+  On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
+  
+  @return Renvoie un jeu correctement initialisé
+*)
+let make_camlbrick() : t_camlbrick =
 
+  (* Itération 1, 2, 3 et 4 *)
 
+  let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
+  let l_param : t_camlbrick_param = make_camlbrick_param() in
+  let l_grid : t_brick_kind array array = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_empty in
+  let l_paddle : t_paddle = make_paddle() in
+  let l_ball : t_ball = make_ball() in
 
+  for i = 0 to (l_param.world_width / l_param.brick_width) - 1
+  do
+    for j = 0 to (l_param.world_bricks_height / l_param.brick_height) - 1
+    do
+      l_grid.(i).(j) <- brick_kind.(Random.int(5))
+    done;
+  done;
+  {
+    param = l_param ; 
+    grid = l_grid ;
+    gamestate = PAUSING ;
+    paddle = l_paddle ;
+    balls = [l_ball]
+    };
+;;
 
 (**
   Fonction utilitaire qui permet de traduire l'état du jeu sous la forme d'une chaîne de caractère.
@@ -320,10 +366,21 @@ let make_ball(x,y, size : int * int * int) : t_ball =
 
   @param game représente le jeu en cours d'exécution.
   @return Renvoie la chaîne de caractère représentant l'état du jeu.
+
+  @author Thomas CALBERAC
 *)
 let string_of_gamestate(game : t_camlbrick) : string =
+
   (* Itération 1,2,3 et 4 *)
-  "INCONNU"
+  if game.gamestate = PLAYING
+  then
+    "Playing"
+  else
+    if game.gamestate = PAUSING
+    then
+      "Pausing"
+    else 
+      "Gameover"
 ;;
 
 (**
@@ -337,7 +394,9 @@ let string_of_gamestate(game : t_camlbrick) : string =
     @author Thomas CALBERAC
 *)
 let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
+
   (* Itération 1 *)
+
   game.grid.(i).(j)
 ;;
 
@@ -360,7 +419,9 @@ let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
     @author Thomas CALBERAC
 *)
 let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color = 
+
   (* Itération 1 *)
+
   if brick_get(game , i , j) = BK_block
   then 
     GRAY
@@ -381,65 +442,139 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
 ;;
 
 (**
+    focntion qui renvoie la taille de la raquette d'une partie donnée
+
+    @param game partie en cours
+    @return Renvoie la taille en entier de la largeur de la raquette
+
+    @author Thomas CALBERAC
+*)
+let paddle_size_pixel(game : t_camlbrick) : int = 
+
+  (* Itération 2 *)
+
+  if game.paddle.size = PS_SMALL
+  then
+    50
+  else
+    if game.paddle.size = PS_MEDIUM
+    then
+      75
+    else 
+      100 
+;;
+
+(**
     Fonction qui à partir d'une partie récupère la position de la 
     partie gauche de la raquette
+
     @param game partie en cours 
     @return Renvoie la position gauche du rectangle symbolisant la raquette
 
     @author Thomas CALBERAC
 *)
 let paddle_x(game : t_camlbrick) : int= 
+
   (* Itération 2 *)
-  let left_paddle_x : int = (game.paddle.x) - (game.paddle.width / 2) in
+
+  let left_paddle_x : int = !(game.paddle.position.x) - (paddle_size_pixel(game) / 2) in
   left_paddle_x ; 
 ;;
 
-let paddle_size_pixel(game : t_camlbrick) : int = 
-  (* Itération 2 *)
-  0
-;;
+(** 
+    fonction qui déplace la raquette latéralement vers la gauche
 
+    @param game partie en cours
+    
+    @author Thomas CALBERAC
+*)
 let paddle_move_left(game : t_camlbrick) : unit = 
+
   (* Itération 2 *)
-  ()
+
+  if !(game.paddle.position.x) - (paddle_size_pixel(game) /2) <= (-(game.param.world_width) / 2)
+  then
+    ()
+  else
+    game.paddle.position.x := !(game.paddle.position.x) - 5
+  
 ;;
-let paddle_move_right(game : t_camlbrick) : unit =
-  (* Itération 2 *)
-  ()
- ;;
 
 (**
-La fonction regarde si le nombre de balles est supérieur
-à 0. Si oui, elle renvoit vrai, sinon faux.
-@author Ibraguim KARSAMOV
+    fonction qui déplace la raquette latéralement vers la droite
+
+    @param game partie en cours
+    
+    @author Thomas CALBERAC
+*)
+let paddle_move_right(game : t_camlbrick) : unit =
+
+  (* Itération 2 *)
+  
+  if !(game.paddle.position.x) + (paddle_size_pixel(game) /2) >= ((game.param.world_width) / 2)
+  then
+    ()
+  else
+    game.paddle.position.x := !(game.paddle.position.x) + 5
+    
+;;
+
+
+(**
+  Fonction qui test si une partie possède au moins une balle
+
+  @param game partie en cours
+  @return false si pas de balle , true si au moins une balle
+
+  @author Thomas CALBERAC
 *)
 let has_ball(game : t_camlbrick) : bool =
+
   (* Itération 2 *)
- if snd(game.balls) > 0 then true
- else false
+
+  if game.balls = [] 
+  then 
+    false
+  else
+    true
+
 ;;
 
-(**
-La fonction renvoi le nombre de balles depuis le tuple balls
-@author Ibraguim KARSAMOV
+(** 
+  Fonction qui compte le nombre de balles dans une partie
+
+  @param game partie en cours
+  @return Renvoie un entier représentant le nombre de balles
+
+  @author Thomas CALBERAC
 *)
 let balls_count(game : t_camlbrick) : int =
+
   (* Itération 2 *)
-  snd(game.balls)
+
+  List.length(game.balls)
 ;;
 
-(**
-La fonciton renvoi la liste des balles depuis le tuple balls
-@author Ibraguim KARSAMOV
+(** 
+  Fonction qui donne la liste des balles d'une partie
+
+  @param game partie en cours
+  @return Renvoie la liste des balles de la partie
+
+  @author Thomas CALBERAC
 *)
 let balls_get(game : t_camlbrick) : t_ball list = 
   (* Itération 2 *)
-  fst(game.balls)
+  game.balls
 ;;
 
 (**
-La fonction renvoie la ième balle de la liste fst(game.balls)
-@author Ibraguim KARSAMOV
+  Fonction qui récupère la i ème balle de la liste de balle d'une partie
+
+  @param game partie en cours
+  @return Renvoie la balle du rang i
+
+  @author Thomas CALBERAC
 *)
 let ball_get(game, i : t_camlbrick * int) : t_ball =
   (* Itération 2 *)
@@ -448,49 +583,133 @@ let ball_get(game, i : t_camlbrick * int) : t_ball =
 ;;
 
 (**
-Renvoi l'abscisse d'une balle
-@author Ibraguim KARSAMOV
+  Fonction qui renvoie l'abcisse du centre d'une balle
+
+  @param game partie en cours
+  @param ball balle pour laquelle on veut récupérer l'abcisse
+  @return Renvoie l'abcisse de la balle
+
+  @author Thomas CALBERAC
 *)
-let ball_x(game,ball : t_camlbrick * t_ball) : int =
+let ball_x(game , ball : t_camlbrick * t_ball) : int =
+
   (* Itération 2 *)
-  !(ball.position.x)
+
+  let l_res : int ref = ref 0 in
+
+  for i = 0 to List.length(game.balls) - 1
+  do
+    if ball_get(game , i) = ball
+    then
+      l_res := !((List.nth (game.balls) (i)).position.x) 
+    else
+      ()
+  done;
+  !l_res;
 ;;
 
 (**
-Renvoi l'ordonné d'une balle
-@author Ibraguim KARSAMOV
+  Fonction qui renvoie l'ordonnée du centre d'une balle
+  
+  @param game partie en cours
+  @param ball balle pour laquelle on veut récupérer l'ordonnée
+  @return Renvoie l'ordonnée de la balle
+
+  @author Thomas CALBERAC
 *)
 let ball_y(game, ball : t_camlbrick * t_ball) : int =
+
   (* Itération 2 *)
-  !(ball.position.y)
+
+  let l_res : int ref = ref 0 in
+
+  for i = 0 to List.length(game.balls) - 1
+  do
+    if ball_get(game , i) = ball
+    then
+      l_res := !((List.nth (game.balls) (i)).position.y)
+    else
+      ()
+  done;
+  !l_res;
 ;;
 
 (**
-Donne un diamètre en fonction de la taille d'une balle.
-@author Ibraguim KARSAMOV
+  Fonction qui renvoie la taille d'une balle
+  
+  @param game partie en cours
+  @param ball balle pour laquelle on veut récupérer la taille
+  @return Renvoie la taille de la balle
+
+  @author Thomas CALBERAC
 *)
 let ball_size_pixel(game, ball : t_camlbrick * t_ball) : int =
+
   (* Itération 2 *)
-  if ball.size = BS_SMALL
-  then 3
-  else
-    if ball.size = BS_MEDIUM
-    then 5
-    else 10 
+
+  let l_res : int ref = ref 0 in
+
+  for i = 0 to (List.length(game.balls) - 1)
+  do
+
+  let l_current_ball : t_ball ref = ref (ball_get(game , i)) in
+
+    if !l_current_ball = ball
+    then (
+      if !l_current_ball.size = BS_SMALL
+      then
+        l_res := 5 
+      else
+        ();
+      if !l_current_ball.size = BS_MEDIUM
+      then 
+        l_res := 10 
+      else
+        ();
+      if !l_current_ball.size = BS_BIG
+      then 
+        l_res := 20 
+      else
+        ();
+    )
+    else
+      ();
+  done;
+  !l_res
 ;;
 
 (**
-Renvoi une couleur en fonction de la taille d'une balle.
-@author Ibraguim KARSAMOV
+  Fonction qui renvoie la couleur d'une balle
+  
+  @param game partie en cours
+  @param ball balle pour laquelle on veut récupérer la couleur
+  @return Renvoie la couleur de la balle
+
+  @author Thomas CALBERAC
 *)
 let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
+
   (* Itération 2 *)
-  if ball.size = BS_SMALL
-  then WHITE
-  else
-    if ball.size = BS_MEDIUM
-    then ORANGE
-    else RED  
+  let l_res : t_camlbrick_color ref = ref WHITE in
+
+  for i = 0 to List.length(game.balls) - 1
+  do
+    if List.nth (game.balls) (i) = ball
+    then
+      if ball.size = BS_SMALL
+        then
+          l_res := RED
+        else
+          if ball.size = BS_MEDIUM
+          then
+            l_res := YELLOW
+          else 
+            l_res := GRAY
+    else
+      failwith "Error ball_size_pixel : il n'y a pas la balle demandée"
+  done;
+  !l_res;
+
 ;;
 (**
 Fait accumuler la vitesse d'une balle avec dv par addition
@@ -621,7 +840,17 @@ let canvas_keypressed(game, keyString, keyCode : t_camlbrick * string * int) : u
   print_string(keyString);
   print_string(" code=");
   print_int(keyCode);
-  print_newline()
+  print_newline();
+
+  if keyCode = 65361 
+  then 
+    paddle_move_left(game)
+  else
+    if keyCode = 65363 
+      then 
+        paddle_move_right(game)
+      else
+        ()
 ;;
 
 (**
