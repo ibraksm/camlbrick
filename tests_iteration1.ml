@@ -1,8 +1,8 @@
 #mod_use "camlbrick.ml" ;;
 open Camlbrick ;;
-
 #mod_use "CPtest.ml" ;;
 open CPtest ;;
+
 (**
   Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
   Les entiers représentent la composante en X et en Y du vecteur exprimé 
@@ -196,6 +196,52 @@ test_fonc_vec2_mult_scalar();;
 (*
 ===========================================================================================================
 *)
+let l_param : t_camlbrick_param = 
+  {
+    world_width = 800;
+    world_bricks_height = 600;
+    world_empty_height = 200;
+    brick_width = 40;
+    brick_height = 20;
+    paddle_init_width = 100;
+    paddle_init_height = 20;
+    time_speed = ref 20;
+  }
+;;
+
+let l_grid : t_brick_kind array array = [| [| BK_bonus |] ; [| BK_bonus |] |] ;;
+
+let l_gamestate : t_gamestate = PLAYING ;;
+
+let l_paddle : t_paddle = 
+  {
+  size = PS_SMALL ;
+  position = { x = ref 5 ; y = ref 5}
+  }
+;;
+
+let l_ball : t_ball = 
+  {
+    position = {x = ref 10 ; y = ref 10} ;
+    size = BS_MEDIUM ;
+    speed = {x = 2 ; y= 5}
+  }
+;;
+
+let l_game : t_camlbrick = 
+  {
+    param = l_param ;
+    grid = l_grid ;
+    gamestate = l_gamestate ;
+    paddle = l_paddle ;
+    balls = [l_ball] 
+  }
+;;
+
+(*
+===========================================================================================================
+*)
+
 (** 
   Cette fonction extrait le paramétrage d'un jeu à partir du jeu donné en argument.
 
@@ -213,64 +259,18 @@ test_fonc_vec2_mult_scalar();;
 *)
 let test_fonc_param_get() : unit = 
   let l_res : t_camlbrick_param t_test_result = 
-    test_exec(
-      param_get , 
-      "param_get(
-        {
-          param = {
-            world_width = 800;
-            world_bricks_height = 600;
-            world_empty_height = 200;
-            brick_width = 40;
-            brick_height = 20;
-            paddle_init_width = 100;
-            paddle_init_height = 20;
-            time_speed = ref 20;
-            } ; 
-          grid = [| [| BK_bonus |] ; [| BK_bonus |] |] )
-        } " , 
-      (
-        {
-          param = {
-            world_width = 800;
-            world_bricks_height = 600;
-            world_empty_height = 200;
-   
-            brick_width = 40;
-            brick_height = 20;
-   
-            paddle_init_width = 100;
-            paddle_init_height = 20;
-   
-            time_speed = ref 20;
-            } ;
-          grid = [| [| BK_bonus |] ; [| BK_bonus |] |] 
-        }
-      )
-    )
+    test_exec(param_get , "param_get(l_game)" , l_game )
   in
-  assert_equals_result(
-    {
-    world_width = 800;
-    world_bricks_height = 600;
-    world_empty_height = 200;
-
-    brick_width = 40;
-    brick_height = 20;
-
-    paddle_init_width = 100;
-    paddle_init_height = 20;
-
-    time_speed = ref 20;
-    } , 
-    l_res);
+  assert_equals_result(l_param , l_res);
 ;;
 test_fonc_param_get();;
 test_report();;
 test_reset_report();;
+
 (*
 ===========================================================================================================
 *)
+
 (**
   fonction qui récupère une brique à des coordonnées données à 
   partir d'une matrice de brique d'un partie
@@ -281,8 +281,7 @@ test_reset_report();;
 *)  
 let test_fonc_brick_get() : unit = 
   let l_res : t_brick_kind t_test_result = 
-    test_exec(
-      brick_get , 
+    test_exec(brick_get , 
       "brick_get(
         {
           param = {
