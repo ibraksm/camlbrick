@@ -623,8 +623,3 @@ let test_fonc_brick_color() : unit =
   
 ;;
 test_fonc_brick_color();;
-
-
-
-  
-

@@ -11,8 +11,8 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 
 @author Nolan LAURIOUX
 @author Thomas CALBERAC
-@author ...
-@author ...
+@author Ibraguim KARSAMOV
+@author Manal ALOUANI
 
 @version 1
 *)
@@ -715,16 +715,28 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
   !l_res;
 
 ;;
-
+(**
+Fait accumuler la vitesse d'une balle avec dv par addition
+@author Ibraguim KARSAMOV
+*)
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
   (* Itération 3 *)
-  ()
+  ball.speed_vec = {
+    x = ball.speed_vec.x + dv.x ;
+    y = ball.speed_vec.y + dv.y
+  }
 ;;
 
-
+(**
+Multiplie la vitesse d'une balle par le vecteur sv
+@author Ibraguim KARSAMOV
+*)
 let ball_modif_speed_sign(game, ball, sv : t_camlbrick * t_ball * t_vec2) : unit =
   (* Itération 3 *)
-  ()
+  ball.speed_vec = {
+    x = ball.speed_vec.x * sv.x ;
+    y = ball.speed_vec.y * sv.y
+  }
 ;;
 
 let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
@@ -932,7 +944,30 @@ let speed_change(game,xspeed : t_camlbrick * int) : unit=
   print_endline("Change speed : "^(string_of_int xspeed));
 ;;
 
+(**
+  Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
+  Une raquette par défaut et une balle par défaut dans la zone libre.
+  On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
+  
+  @return Renvoie un jeu correctement initialisé
+*)
+let make_camlbrick() : t_camlbrick =
 
+  (* Itération 1, 2, 3 et 4 *)
+
+  let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
+  let l_param : t_camlbrick_param = make_camlbrick_param() in
+  let l_grid : t_brick_kind array array = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_empty in
+  
+  for i = 0 to (l_param.world_width / l_param.brick_width) - 1
+  do
+    for j = 0 to (l_param.world_bricks_height / l_param.brick_height) - 1
+    do
+      l_grid.(i).(j) <- brick_kind.(Random.int(5))
+    done;
+  done;
+  {param = l_param ; grid = l_grid ; gamestate = PLAYING ; paddle = make_paddle() ; ball = ()};
+;;
 
 let animate_action(game : t_camlbrick) : unit =  
   (* Iteration 1,2,3 et 4
