@@ -109,10 +109,6 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 (**
     Type structuré d'un vecteur 2D.
     Les composantes x et y sont des entiers.
-<<<<<<< HEAD
-=======
-
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
     @author Thomas CALBERAC
 *)
 type t_vec2 = {x : int ; y : int};;
@@ -124,13 +120,9 @@ type t_vec2 = {x : int ; y : int};;
 
   @param p_x première composante du vecteur
   @param p_y seconde composante du vecteur
-<<<<<<< HEAD
-  @return Renvoie le vecteur dont les composantes sont (x,y).
-=======
   @return Renvoie le vecteur de type t_vec2 dont les composantes sont (x,y).
 
   @author Thomas CALBERAC
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 *)
 let make_vec2(p_x , p_y : int * int) : t_vec2 = 
   (* Itération 1 *)
@@ -192,11 +184,7 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
   (* Itération 1 *)
-<<<<<<< HEAD
-  l_mult_vec : t_vec2 = {x = (p_vec1.x * p_b.x) ; y = (p_vec2.y * p_b.y)} in
-=======
   let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec1.y * p_vec2.y)} in
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
   l_mult_vec;
 ;;
 
@@ -220,11 +208,6 @@ let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   l_mult_vec;
 ;;
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 (* Itération 2 *)
 type t_ball = unit;;
 
@@ -241,17 +224,12 @@ type t_paddle = unit;;
       <li>sa couleur : [t_camlbrick_color]</li>
     </ul>
 *)
-<<<<<<< HEAD
-type t_camlbrick = {brick_kind : t_brick_kind ; brick_color : t_camlbrick_color};;
-
-=======
 type t_camlbrick = 
   { 
   param : t_camlbrick_param ;(** paramètres de la partie *)
   grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
   }
 ;;
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 
 (**
   Cette fonction construit le paramétrage du jeu, avec des informations personnalisable avec les contraintes du sujet.
@@ -294,9 +272,6 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 let make_camlbrick() : t_camlbrick =
 
   (* Itération 1, 2, 3 et 4 *)
-<<<<<<< HEAD
-  ()
-=======
 
   let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
   let l_param : t_camlbrick_param = make_camlbrick_param() in
@@ -310,7 +285,6 @@ let make_camlbrick() : t_camlbrick =
     done;
   done;
   {param = l_param ; grid = l_grid};
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 ;;
 
 
@@ -345,8 +319,6 @@ let string_of_gamestate(game : t_camlbrick) : string =
   "INCONNU"
 ;;
 
-<<<<<<< HEAD
-=======
 (**
     fonction qui récupère une brique à des coordonnées données à 
     partir d'une matrice de brique d'un partie
@@ -357,7 +329,6 @@ let string_of_gamestate(game : t_camlbrick) : string =
 
     @author Thomas CALBERAC
 *)
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   (* Itération 1 *)
   if i = 1 && j = 1
@@ -365,16 +336,6 @@ let brick_get(game, i, j : t_camlbrick * int * int)  : t_brick_kind =
   else BK_simple 
 ;;
 
-<<<<<<< HEAD
-let brick_hit(game, i, j : t_camlbrick * int * int)  : t_brick_kind = 
-  (* Itération 1 *)
-  BK_empty
-;;
-
-let brick_color(game,i,j : t_camlbrick * int * int) : t_camlbrick_color = 
-  (* Itération 1 *)
-  ORANGE
-=======
 (**
     fonction qui prend en paramètre une game et les coordonnées d'une brique et renvoi
     la couleur de la brique.
@@ -412,7 +373,6 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
                 RED
               else
                 GREEN
->>>>>>> f438cf7e76e9b9d7b1990cfdc7ec114e7e4e1e89
 ;;
 
 
@@ -469,28 +429,36 @@ else
 ;;
 
 let balls_count(game : t_camlbrick) : int =
-t_ball
-
+if t_ball = 0 
+  then 0 
+else t_ball
+;;
   (* Itération 2 *)
   0
 ;;
 
 let balls_get(game : t_camlbrick) : t_ball list = 
+t_ball
   (* Itération 2 *)
   []
 ;;
 
 let ball_get(game, i : t_camlbrick * int) : t_ball =
+t_ball.i in 
+(i >= 0 && i < n )
+;;
   (* Itération 2 *)
   ()
 ;;
 
 let ball_x(game,ball : t_camlbrick * t_ball) : int =
+t_ball.X
   (* Itération 2 *)
   0
 ;;
 
 let ball_y(game, ball : t_camlbrick * t_ball) : int =
+t_ball.Y
   (* Itération 2 *)
   0
 ;;
@@ -506,6 +474,7 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
 ;;
 
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
+ball.speed := vec2_add (!(ball.speed), sv)
   (* Itération 3 *)
   ()
 ;;
@@ -522,6 +491,7 @@ let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
 ;;
 
 let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool =
+x >= x1 && x <= x2 && y >= y1 && y <= y2
   (* Itération 3 *)
   false
 ;;
