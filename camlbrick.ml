@@ -107,24 +107,22 @@ type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 
 
 (**
-    Type structuré d'un vecteur 2D.
-    Les composantes x et y sont des entiers.
-    @author Thomas CALBERAC
+  vecteur 2D
+
+  @author Thomas CALBERAC
 *)
-type t_vec2 = {x : int ; y : int} ;; (* Itération 1 *)
+type t_vec2 = 
+
+  (* Itération 1 *)
+
+  {
+    x : int ;(** coordonée horizontale *)
+    y : int(** coordonée verticale *)
+  } 
+;; 
 
 (**
-    Type structuré pour la position d'un élément
-    avec x pour la coordonnée horizontale et y pour la coordonnée verticale
-
-    @author Thomas CALBERAC
-*)
-type t_position = { x : int ref ; y : int ref} ;; 
-
-(**
-  Cette fonction permet de créer un vecteur 2D à partir de deux entiers.
-  Les entiers représentent la composante en X et en Y du vecteur exprimé 
-  avec un type structuré.
+  Fonction qui crée un vecteur
 
   @param p_x première composante du vecteur
   @param p_y seconde composante du vecteur
@@ -133,13 +131,16 @@ type t_position = { x : int ref ; y : int ref} ;;
   @author Thomas CALBERAC
 *)
 let make_vec2(p_x , p_y : int * int) : t_vec2 = 
+
   (* Itération 1 *)
+
   let l_vec : t_vec2 = {x = p_x ; y = p_y} in
   l_vec;
 ;;
 
 (**
-  Cette fonction renvoie un vecteur qui est la somme des deux vecteurs donnés en arguments.
+  Fonction qui additionne 2 vecteurs entre eux
+
   @param p_vec1 premier vecteur
   @param p_vec2 second vecteur
   @return Renvoie un vecteur égale à la somme des vecteurs.
@@ -147,7 +148,9 @@ let make_vec2(p_x , p_y : int * int) : t_vec2 =
   @author Thomas CALBERAC
 *)
 let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
+
   (* Itération 1 *)
+
   let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_vec2.x) ; y = (p_vec1.y + p_vec2.y)} in
   l_sum_vec;
 ;;
@@ -167,9 +170,13 @@ let vec2_add_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
   @param p_x composante en x du second vecteur
   @param p_y composante en y du second vecteur
   @return Renvoie un vecteur qui est la résultante du vecteur 
+
+  @author Thomas CALBERAC
 *)
 let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
+
   (* Itération 1 *)
+
   let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_x) ; y = (p_vec1.y + p_y)} in
   l_sum_vec;
 ;;
@@ -185,16 +192,19 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
   @param p_vec1 premier vecteur
   @param p_vec2 second vecteur
   @return Renvoie un vecteur qui résulte de la multiplication des composantes. 
+
   @author Thomas CALBERAC
 *)
 let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 = 
+
   (* Itération 1 *)
+
   let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec1.y * p_vec2.y)} in
   l_mult_vec;
 ;;
 
 (**
-  Cette fonction calcul la multiplication des composantes du vecteur a et du vecteur construit à partir de (x,y).
+  Fonction qui multiplie deux coordonnées avec un vecteur
   Cette fonction est une optimisation du code suivant (que vous ne devez pas faire en l'état):
   {[
 let vec2_mult_scalar(a,x,y : t_vec2 * int * int) : t_vec2 =
@@ -240,9 +250,10 @@ type t_ball =
 type t_paddle = 
 
 (* Itération 2 *)
+
   {
     size : t_paddle_size ;(** taille de la raquette *)
-    position : t_position (** position de la raquette *)
+    position : t_position(** position de la raquette *)
   }
 ;;
 
@@ -264,7 +275,7 @@ type t_camlbrick =
   grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
   gamestate : t_gamestate ;(** état de la partie *)
   paddle : t_paddle ;(** raquette *)
-  balls : t_ball list;(** balle *)
+  balls : t_ball list(** balle *)
   }
 ;;
 
@@ -290,12 +301,13 @@ let make_camlbrick_param() : t_camlbrick_param = {
 
 
 (**
-  Cette fonction extrait le paramétrage d'un jeu à partir du jeu donné en argument.
+  Fonction qui récupère les paramètres d'une partie
+
   @param game jeu en cours d'exécution.
   @return Renvoie le paramétrage actuel.
 
   @author Thomas CALBERAC
-  *)
+*)
 let param_get(game : t_camlbrick) : t_camlbrick_param =
 
   (* Itération 1 *)
@@ -304,7 +316,7 @@ let param_get(game : t_camlbrick) : t_camlbrick_param =
 ;;
 
 (**
-  Cette fonction crée une raquette par défaut au milieu de l'écran et de taille normal.  
+  Fonction qui crée une raquette  
   @deprecated Cette fonction est là juste pour le debug ou pour débuter certains traitements de test.
 
   @author Thomas CALBERAC
@@ -314,19 +326,24 @@ let make_paddle() : t_paddle =
   (* Itération 2 *)
 
   {
-    size = PS_SMALL ;
-    position = {x = ref 0  ; y = ref 0}
+    size = PS_SMALL ; (** Valeure par défault *)
+    position = {x = ref 0  ; y = ref 0}(** Position par défault *)
   }
 ;;
 
+(**
+  Fonction qui crée une balle
+
+  @author Thomas CALBERAC
+*)
 let make_ball() : t_ball =
 
   (* Itération 3 *)
   
   {
-    position = {x = ref 0 ; y = ref 0};
-    size = BS_SMALL ;
-    speed = {x = 0 ; y = 0}
+    position = {x = ref 0 ; y = ref 0};(**Position par défault*)
+    size = BS_SMALL ;(** Taille par défault*)
+    speed = {x = 0 ; y = 0}(** Vitesse par défault*)
   }
 ;;
 (**
@@ -335,6 +352,8 @@ let make_ball() : t_ball =
   On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
   
   @return Renvoie un jeu correctement initialisé
+
+  @author Thomas CALBERAC
 *)
 let make_camlbrick() : t_camlbrick =
 
@@ -799,7 +818,6 @@ let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool 
   (x1 <= x) && (x <= x2) && (y1 <= y) && (y <= y2)
 ;;
 
-(* cette fonction va prendre 5 ans avant d'être finie par NOLAN LAURIOUX *)
 let ball_remove_out_of_border(game,balls : t_camlbrick * t_ball list ) : t_ball list = 
   (* Itération 3 *)
   balls
@@ -993,31 +1011,6 @@ let speed_get(game : t_camlbrick) : int =
 *)
 let speed_change(game,xspeed : t_camlbrick * int) : unit=
   print_endline("Change speed : "^(string_of_int xspeed));
-;;
-
-(**
-  Cette fonction crée une nouvelle structure qui initialise le monde avec aucune brique visible.
-  Une raquette par défaut et une balle par défaut dans la zone libre.
-  On remplace ensuite aléatoirement les briques visibles avec des briques de tous types.
-  
-  @return Renvoie un jeu correctement initialisé
-*)
-let make_camlbrick() : t_camlbrick =
-
-  (* Itération 1, 2, 3 et 4 *)
-
-  let brick_kind : t_brick_kind array = [| BK_empty ; BK_simple ; BK_double ; BK_block ; BK_bonus |] in
-  let l_param : t_camlbrick_param = make_camlbrick_param() in
-  let l_grid : t_brick_kind array array = Array.make_matrix (l_param.world_width / l_param.brick_width) (l_param.world_bricks_height / l_param.brick_height) BK_empty in
-  
-  for i = 0 to (l_param.world_width / l_param.brick_width) - 1
-  do
-    for j = 0 to (l_param.world_bricks_height / l_param.brick_height) - 1
-    do
-      l_grid.(i).(j) <- brick_kind.(Random.int(5))
-    done;
-  done;
-  {param = l_param ; grid = l_grid ; gamestate = PLAYING ; paddle = make_paddle() ; ball = ()};
 ;;
 
 let animate_action(game : t_camlbrick) : unit =  
