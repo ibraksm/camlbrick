@@ -51,6 +51,7 @@ let test_fonc_paddle_size_pixel() : unit =
   in
   let l_ball : t_ball = 
     {
+      name = ""
       position = {x = ref 10 ; y = ref 10} ;
       size = BS_MEDIUM ;
       speed = {x = 2 ; y= 5}

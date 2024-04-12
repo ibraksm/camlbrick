@@ -1,6 +1,5 @@
 #directory "+labltk";;
 #load "labltk.cma";;
-
 #mod_use "camlbrick.ml";; 
 
 (* https://who.rocq.inria.fr/Francois.Thomasset/Labltk/Tutoriel_FT/ *)

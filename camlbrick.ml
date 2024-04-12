@@ -16,7 +16,17 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 
 @version 1
 *)
+(* 
+pour compiler : 
+   
+ocamlc -c camlbrick.ml
 
+ocamlc -c camlbrick_gui.ml -I +labltk labltk.cma camlbrick.cmo
+
+ocamlc -c camlbrick_launcher.ml -I +labltk labltk.cma camlbrick.cmo camlbrick_gui.cmo 
+
+ocamldoc -html -d doc -charset utf8 camlbrick.ml
+*)
 (** Compteur utilisé en interne pour afficher le numéro de la frame du jeu vidéo. 
     Vous pouvez utiliser cette variable en lecture, mais nous ne devez pas modifier
     sa valeur! *)
@@ -102,10 +112,6 @@ type t_paddle_size = PS_SMALL | PS_MEDIUM | PS_BIG;;
 *)
 type t_gamestate = GAMEOVER | PLAYING | PAUSING;;
 
-
-
-
-
 (**
   vecteur 2D
 
@@ -116,8 +122,8 @@ type t_vec2 =
   (* Itération 1 *)
 
   {
-    x : int ;(** coordonée horizontale *)
-    y : int(** coordonée verticale *)
+    x : int ;(** coordonnée horizontale *)
+    y : int (** coordonnée verticale *)
   } 
 ;; 
 
@@ -151,7 +157,7 @@ let vec2_add(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
 
   (* Itération 1 *)
 
-  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_vec2.x) ; y = (p_vec1.y + p_vec2.y)} in
+  let l_sum_vec : t_vec2 = {x = ( (p_vec1.x) + (p_vec2.x) ) ; y = ( (p_vec1.y) + (p_vec2.y) ) } in
   l_sum_vec;
 ;;
 
@@ -177,7 +183,7 @@ let vec2_add_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 
   (* Itération 1 *)
 
-  let l_sum_vec : t_vec2 = {x = (p_vec1.x + p_x) ; y = (p_vec1.y + p_y)} in
+  let l_sum_vec : t_vec2 = {x = ( (p_vec1.x) + p_x )  ; y = ( (p_vec1.y) + p_y )} in
   l_sum_vec;
 ;;
 
@@ -199,7 +205,7 @@ let vec2_mult(p_vec1 , p_vec2 : t_vec2 * t_vec2) : t_vec2 =
 
   (* Itération 1 *)
 
-  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_vec2.x) ; y = (p_vec1.y * p_vec2.y)} in
+  let l_mult_vec : t_vec2 = {x = ( (p_vec1.x) * (p_vec2.x) ) ; y = ( (p_vec1.y) * (p_vec2.y) )} in
   l_mult_vec;
 ;;
 
@@ -222,7 +228,7 @@ let vec2_mult_scalar(p_vec1 , p_x , p_y : t_vec2 * int * int) : t_vec2 =
 
 (* Itération 1 *)
 
-  let l_mult_vec : t_vec2 = {x = (p_vec1.x * p_x) ; y = (p_vec1.y * p_y)} in
+  let l_mult_vec : t_vec2 = {x = ( (p_vec1.x) * p_x ) ; y = ( (p_vec1.y) * p_y ) } in
   l_mult_vec;
 ;;
 
@@ -234,9 +240,10 @@ type t_ball =
 (* Itération 2 *)
 
   {
-    position : t_position ;(** position de la balle *)
+    name : string ; (** Nom de la balle *)
+    position : t_vec2 ref;(** position de la balle *)
     size : t_ball_size ;(** taille de la balle *)
-    speed : t_vec2(** vitesse de la balle *)
+    speed : t_vec2 ref(** vitesse de la balle *)
   }
 ;;
 
@@ -253,7 +260,7 @@ type t_paddle =
 
   {
     size : t_paddle_size ;(** taille de la raquette *)
-    position : t_position(** position de la raquette *)
+    position : t_vec2 ref(** position de la raquette *)
   }
 ;;
 
@@ -273,9 +280,9 @@ type t_camlbrick =
   { 
   param : t_camlbrick_param ;(** paramètres de la partie *)
   grid : t_brick_kind array array ;(** matrice contenant toutes les briques *)
-  gamestate : t_gamestate ;(** état de la partie *)
+  gamestate : t_gamestate ref ;(** état de la partie *)
   paddle : t_paddle ;(** raquette *)
-  balls : t_ball list(** balle *)
+  balls : t_ball list ref(** balles de la partie *)
   }
 ;;
 
@@ -327,7 +334,7 @@ let make_paddle() : t_paddle =
 
   {
     size = PS_SMALL ; (** Valeure par défault *)
-    position = {x = ref 0  ; y = ref 0}(** Position par défault *)
+    position = ref {x = 0  ; y = 0}(** Position par défault *)
   }
 ;;
 
@@ -341,9 +348,10 @@ let make_ball() : t_ball =
   (* Itération 3 *)
   
   {
-    position = {x = ref 0 ; y = ref 0};(**Position par défault*)
+    name = "StarterBall";(** Nom de la balle de départ*)
+    position = ref { x = 0 ; y = 0};(**Position par défault*)
     size = BS_SMALL ;(** Taille par défault*)
-    speed = {x = 0 ; y = 0}(** Vitesse par défault*)
+    speed = ref {x = 0 ; y = 0}(** Vitesse par défault*)
   }
 ;;
 (**
@@ -463,7 +471,8 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
               else
                 GREEN
 ;;
-
+let brick_get_corners(brick : t_brick_kind) : int list =
+  
 (**
     focntion qui renvoie la taille de la raquette d'une partie donnée
 
@@ -500,7 +509,7 @@ let paddle_x(game : t_camlbrick) : int=
 
   (* Itération 2 *)
 
-  let left_paddle_x : int = !(game.paddle.position.x) - (paddle_size_pixel(game) / 2) in
+  let left_paddle_x : int = !(game.paddle.position).x - (paddle_size_pixel(game) / 2) in
   left_paddle_x ; 
 ;;
 
@@ -515,11 +524,11 @@ let paddle_move_left(game : t_camlbrick) : unit =
 
   (* Itération 2 *)
 
-  if !(game.paddle.position.x) - (paddle_size_pixel(game) /2) <= (-(game.param.world_width) / 2)
+  if !(game.paddle.position).x - (paddle_size_pixel(game) /2) <= (-(game.param.world_width) / 2)
   then
     ()
   else
-    game.paddle.position.x := !(game.paddle.position.x) - 5
+    game.paddle.position := { x = ( !(game.paddle.position).x - 5 ) ; y = ( !(game.paddle.position).y ) }
   
 ;;
 
@@ -534,11 +543,11 @@ let paddle_move_right(game : t_camlbrick) : unit =
 
   (* Itération 2 *)
   
-  if !(game.paddle.position.x) + (paddle_size_pixel(game) /2) >= ((game.param.world_width) / 2)
+  if !(game.paddle.position).x + (paddle_size_pixel(game) /2) >= ((game.param.world_width) / 2)
   then
     ()
   else
-    game.paddle.position.x := !(game.paddle.position.x) + 5
+    game.paddle.position := { x = ( !(game.paddle.position).x + 5 ) ; y = ( !(game.paddle.position).y ) }
     
 ;;
 
@@ -602,14 +611,14 @@ let balls_get(game : t_camlbrick) : t_ball list =
 let ball_get(game, i : t_camlbrick * int) : t_ball =
   (* Itération 2 *)
   
-  List.nth (game.balls) (i)
+  (List.nth (game.balls) (i))
 ;;
 
 (**
   Fonction qui renvoie l'abcisse du centre d'une balle
 
   @param game partie en cours
-  @param ball balle pour laquelle on veut récupérer l'abcisse
+  @param ball nom de la balle que l'on veut récupérer
   @return Renvoie l'abcisse de la balle
 
   @author Thomas CALBERAC
@@ -622,9 +631,9 @@ let ball_x(game , ball : t_camlbrick * t_ball) : int =
 
   for i = 0 to List.length(game.balls) - 1
   do
-    if ball_get(game , i) = ball
+    if (ball_get(game , i)).name = ball.name
     then
-      l_res := !((List.nth (game.balls) (i)).position.x) 
+      l_res := !((List.nth (game.balls) (i)).position).x 
     else
       ()
   done;
@@ -635,12 +644,12 @@ let ball_x(game , ball : t_camlbrick * t_ball) : int =
   Fonction qui renvoie l'ordonnée du centre d'une balle
   
   @param game partie en cours
-  @param ball balle pour laquelle on veut récupérer l'ordonnée
+  @param ball nom de la balle que l'on veut récupérer
   @return Renvoie l'ordonnée de la balle
 
   @author Thomas CALBERAC
 *)
-let ball_y(game, ball : t_camlbrick * t_ball) : int =
+let ball_y(game , ball : t_camlbrick * t_ball) : int =
 
   (* Itération 2 *)
 
@@ -648,9 +657,9 @@ let ball_y(game, ball : t_camlbrick * t_ball) : int =
 
   for i = 0 to List.length(game.balls) - 1
   do
-    if ball_get(game , i) = ball
+    if (ball_get(game , i)).name = ball.name
     then
-      l_res := !((List.nth (game.balls) (i)).position.y)
+      l_res := !((List.nth (game.balls) (i)).position).y 
     else
       ()
   done;
@@ -745,16 +754,12 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
   @author Thomas CALBERAC
 *)
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
-
+  
   (* Itération 3 *)
 
-  for i = 0 to List.length(game.balls) - 1
+  for i = 0 to ( List.length(game.balls) - 1 )
   do
-    if List.nth (game.balls) (i) = ball
-    then
-      (List.nth (game.balls) (i)).speed := vec2_add(!((List.nth (game.balls) (i)).speed) , !dv)
-    else
-      ()
+    (ball_get(game, i)).speed := vec2_add( !((ball_get(game, i)).speed) , dv )
   done;
 ;;
 
@@ -769,16 +774,12 @@ let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
   @author Thomas CALBERAC
 *)
 let ball_modif_speed_sign(game, ball, sv : t_camlbrick * t_ball * t_vec2) : unit =
-
+  
   (* Itération 3 *)
 
-  for i = 0 to List.length(game.balls) - 1
+  for i = 0 to ( List.length(game.balls) - 1 )
   do
-    if List.nth (game.balls) (i) = ball
-    then
-      (List.nth (game.balls) (i)).speed := vec2_mult(!((List.nth (game.balls) (i)).speed) , !dv)
-    else
-      ()
+    (ball_get(game, i)).speed := vec2_mult( !((ball_get(game, i)).speed) , sv )
   done;
 ;;
 
@@ -792,7 +793,7 @@ let ball_modif_speed_sign(game, ball, sv : t_camlbrick * t_ball * t_vec2) : unit
   @param y coordonnée verticale du centre du cercle
   @return Renvoie vrai si le point est dans le cercle et faux dans le cas contraire
 
-  @author Thomas CALBERAC
+  @author Manal ALOUANI
 *)
 let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
 
@@ -809,7 +810,7 @@ let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
   @param y1 coordonnée horizontale du coin gauche du rectangle
   @return Renvoie vrai si le point est dans le cercle et faux dans le cas contraire
 
-  @author Thomas CALBERAC
+  @author Manal ALOUANI
 *)
 let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool =
 
@@ -818,22 +819,38 @@ let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool 
   (x1 <= x) && (x <= x2) && (y1 <= y) && (y <= y2)
 ;;
 
-let ball_remove_out_of_border(game,balls : t_camlbrick * t_ball list ) : t_ball list = 
+let ball_remove_out_of_border(game,balls : t_camlbrick * t_ball list ) : t_ball list =
+
   (* Itération 3 *)
-  balls
+  
+  for i = 0 to ( List.length(!(game.balls)) - 1 )
+  do
+    if !((List.nth (!(game.balls)) (i)).position).y > ( (param_get(game) ).world_bricks_height + (param_get(game)).world_empty_height)
+    then
+      ()
+    else
+      game.balls := !(game.balls) @ [(List.nth (!(game.balls)) (i))]
+  done;
+  !(game.balls)
 ;;
 
 let ball_hit_paddle(game,ball,paddle : t_camlbrick * t_ball * t_paddle) : unit =
 
   (* Itération 3 *)
-
-  
+  ()
 ;;
 
 
 (* lire l'énoncé choix à faire *)
 let ball_hit_corner_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : bool =
   (* Itération 3 *)
+  for k = 0 to Array.length(!(game.grid) - 1)
+  do
+    for l = 0 to Array.length(k)
+    do
+      if brick_get(game, k, l)
+      then
+
   false
 ;;
 
@@ -1013,8 +1030,10 @@ let speed_change(game,xspeed : t_camlbrick * int) : unit=
   print_endline("Change speed : "^(string_of_int xspeed));
 ;;
 
-let animate_action(game : t_camlbrick) : unit =  
-  (* Iteration 1,2,3 et 4
+let animate_action(game : t_camlbrick) : unit = 
+
+  (* 
+  Iteration 1,2,3 et 4
     Cette fonction est appelée par l'interface graphique à chaque frame
     du jeu vidéo.
     Vous devez mettre tout le code qui permet de montrer l'évolution du jeu vidéo.    
