@@ -471,15 +471,23 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
               else
                 GREEN
 ;;
-let brick_get_corners(brick : t_brick_kind) : int list =
+
+(**
+  fonction qui renvoie les coordonnées des quatres coins
+  de la brique.
+*)
+let brick_get_corners(brick : t_brick_kind) : int * int list =
+  (0,0)
+;;
+
   
 (**
-    focntion qui renvoie la taille de la raquette d'une partie donnée
+  focntion qui renvoie la taille de la raquette d'une partie donnée
 
-    @param game partie en cours
-    @return Renvoie la taille en entier de la largeur de la raquette
+  @param game partie en cours
+  @return Renvoie la taille en entier de la largeur de la raquette
 
-    @author Thomas CALBERAC
+  @author Thomas CALBERAC
 *)
 let paddle_size_pixel(game : t_camlbrick) : int = 
 
@@ -524,7 +532,7 @@ let paddle_move_left(game : t_camlbrick) : unit =
 
   (* Itération 2 *)
 
-  if !(game.paddle.position).x - (paddle_size_pixel(game) /2) <= (-(game.param.world_width) / 2)
+  if !(game.paddle.position).x - ((paddle_size_pixel(game)) /2) <= (-(game.param.world_width) / 2)
   then
     ()
   else
@@ -595,8 +603,9 @@ let balls_count(game : t_camlbrick) : int =
   @author Thomas CALBERAC
 *)
 let balls_get(game : t_camlbrick) : t_ball list = 
-t_ball
+
   (* Itération 2 *)
+
   game.balls
 ;;
 
@@ -609,9 +618,7 @@ t_ball
   @author Thomas CALBERAC
 *)
 let ball_get(game, i : t_camlbrick * int) : t_ball =
-t_ball.i in 
-(i >= 0 && i < n )
-;;
+
   (* Itération 2 *)
   
   (List.nth (game.balls) (i))
@@ -652,16 +659,8 @@ let ball_x(game , ball : t_camlbrick * t_ball) : int =
 
   @author Thomas CALBERAC
 *)
-<<<<<<< HEAD
 let ball_y(game , ball : t_camlbrick * t_ball) : int =
-=======
-let ball_y(game, ball : t_camlbrick * t_ball) : int =
-<<<<<<< HEAD
-t_ball.Y
-=======
->>>>>>> 5c4cb251a28b411a0fa22cb30b030c64721b29b3
 
->>>>>>> 602a4a03fd834c7034ffbe09b0879789d557cea9
   (* Itération 2 *)
 
   let l_res : int ref = ref 0 in
@@ -765,15 +764,7 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
   @author Thomas CALBERAC
 *)
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
-<<<<<<< HEAD
-  
-=======
-<<<<<<< HEAD
-ball.speed := vec2_add (!(ball.speed), sv)
-=======
 
->>>>>>> 602a4a03fd834c7034ffbe09b0879789d557cea9
->>>>>>> 5c4cb251a28b411a0fa22cb30b030c64721b29b3
   (* Itération 3 *)
 
   for i = 0 to ( List.length(game.balls) - 1 )
@@ -832,11 +823,7 @@ let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
   @author Manal ALOUANI
 *)
 let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool =
-<<<<<<< HEAD
-x >= x1 && x <= x2 && y >= y1 && y <= y2
-=======
-
->>>>>>> 602a4a03fd834c7034ffbe09b0879789d557cea9
+  
   (* Itération 3 *)
 
   (x1 <= x) && (x <= x2) && (y1 <= y) && (y <= y2)
@@ -867,12 +854,19 @@ let ball_hit_paddle(game,ball,paddle : t_camlbrick * t_ball * t_paddle) : unit =
 (* lire l'énoncé choix à faire *)
 let ball_hit_corner_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : bool =
   (* Itération 3 *)
+
+(*  
   for k = 0 to Array.length(!(game.grid) - 1)
   do
     for l = 0 to Array.length(k)
     do
       if brick_get(game, k, l)
       then
+        ()
+      else
+        ()
+    done;
+  done;*)
 
   false
 ;;
