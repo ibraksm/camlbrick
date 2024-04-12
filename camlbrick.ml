@@ -581,7 +581,6 @@ let has_ball(game : t_camlbrick) : bool =
   @author Thomas CALBERAC
 *)
 let balls_count(game : t_camlbrick) : int =
-
   (* Itération 2 *)
 
   List.length(game.balls)
@@ -596,6 +595,7 @@ let balls_count(game : t_camlbrick) : int =
   @author Thomas CALBERAC
 *)
 let balls_get(game : t_camlbrick) : t_ball list = 
+t_ball
   (* Itération 2 *)
   game.balls
 ;;
@@ -609,6 +609,9 @@ let balls_get(game : t_camlbrick) : t_ball list =
   @author Thomas CALBERAC
 *)
 let ball_get(game, i : t_camlbrick * int) : t_ball =
+t_ball.i in 
+(i >= 0 && i < n )
+;;
   (* Itération 2 *)
   
   (List.nth (game.balls) (i))
@@ -649,8 +652,16 @@ let ball_x(game , ball : t_camlbrick * t_ball) : int =
 
   @author Thomas CALBERAC
 *)
+<<<<<<< HEAD
 let ball_y(game , ball : t_camlbrick * t_ball) : int =
+=======
+let ball_y(game, ball : t_camlbrick * t_ball) : int =
+<<<<<<< HEAD
+t_ball.Y
+=======
+>>>>>>> 5c4cb251a28b411a0fa22cb30b030c64721b29b3
 
+>>>>>>> 602a4a03fd834c7034ffbe09b0879789d557cea9
   (* Itération 2 *)
 
   let l_res : int ref = ref 0 in
@@ -754,7 +765,15 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
   @author Thomas CALBERAC
 *)
 let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
+<<<<<<< HEAD
   
+=======
+<<<<<<< HEAD
+ball.speed := vec2_add (!(ball.speed), sv)
+=======
+
+>>>>>>> 602a4a03fd834c7034ffbe09b0879789d557cea9
+>>>>>>> 5c4cb251a28b411a0fa22cb30b030c64721b29b3
   (* Itération 3 *)
 
   for i = 0 to ( List.length(game.balls) - 1 )
@@ -813,7 +832,11 @@ let is_inside_circle(cx,cy,rad, x, y : int * int * int * int * int) : bool =
   @author Manal ALOUANI
 *)
 let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool =
+<<<<<<< HEAD
+x >= x1 && x <= x2 && y >= y1 && y <= y2
+=======
 
+>>>>>>> 602a4a03fd834c7034ffbe09b0879789d557cea9
   (* Itération 3 *)
 
   (x1 <= x) && (x <= x2) && (y1 <= y) && (y <= y2)
