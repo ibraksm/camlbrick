@@ -337,9 +337,9 @@ let make_ball() : t_ball =
   
   {
     name = "StarterBall";(** Nom de la balle de départ*)
-    position = ref { x = 0 ; y = 0};(**Position par défault*)
+    position = ref { x = 400 ; y = 700};(**Position par défault*)
     size = BS_SMALL ;(** Taille par défault*)
-    speed = ref {x = 0 ; y = 0}(** Vitesse par défault*)
+    speed = ref {x = 0 ; y = 1}(** Vitesse par défault*)
   }
 ;;
 (**
@@ -463,24 +463,18 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
 (**
   fonction qui renvoie les coordonnées des quatres coins
   de la brique.
-*)
-let brick_get_corners(brick : t_brick_kind) : int * int list =
-  (0,[0])
-;;
-(**
+
   @param game partie en cours
   @param i coordonnée en abscisse de la brique
   @param j coordonnée en ordonnée de la brique
 
   @author Thomas CALBERAC
 *)
-let brick_get_corners(game, i , j : t_camlbrick * int * int) : int * int array =
-  let l_i : int = i in
-  let l_j : int = j in
+let brick_get_corners(game, i , j : t_camlbrick * int * int) : (int * int) array =
   let l_width_brick = (param_get(game)).brick_width in
   let l_height_brick = (param_get(game)).brick_height in
 
-  [((i * width_brick) , (j * l_height_brick)) ; (((i * width_brick) + width_brick) , (j * l_height_brick)) ; ((i * width_brick) , ((j * l_height_brick) + l_height_brick)) ; (((i * width_brick) + width_brick) , ((j * l_height_brick) + l_height_brick)) ] 
+  [|((i * l_width_brick) , (j * l_height_brick)) ; (((i * l_width_brick) + l_width_brick) , (j * l_height_brick)) ; ((i * l_width_brick) , ((j * l_height_brick) + l_height_brick)) ; (((i * l_width_brick) + l_width_brick) , ((j * l_height_brick) + l_height_brick)) |] 
 ;;
   
 (**
@@ -831,6 +825,16 @@ let is_inside_quad(x1,y1,x2,y2, x,y : int * int * int * int * int * int) : bool 
   (x1 <= x) && (x <= x2) && (y1 <= y) && (y <= y2)
 ;;
 
+(**
+  fonction qui retire les balles qui ne sont plus dans la zone
+  de jeu 
+
+  @param game partie en cours
+  @param balls liste des balles 
+  @return Renvoie la liste des balles toujours en jeu dans la partie
+
+  @author Thomas CALBERAC
+*)
 let ball_remove_out_of_border(game,balls : t_camlbrick * t_ball list ) : t_ball list =
 
   (* Itération 3 *)
@@ -874,7 +878,17 @@ let ball_hit_paddle (game, ball, paddle : t_camlbrick * t_ball * t_paddle) : uni
 ;;
 
 
-(* lire l'énoncé choix à faire *)
+(**
+  fonction qui prend chaque coin d'une brique et regarde si c'est coin
+  se trouvent dans une balle
+
+  @param game partie en cours
+  @param ball balle de la partie 
+  @param i paramètre non utilisé
+  @param j paramètre non utilisé
+
+  @author Thomas CALBERAC
+*)
 let ball_hit_corner_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : bool =
 
   (* Itération 3 *)
@@ -883,12 +897,11 @@ let ball_hit_corner_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : b
 
   for k = 0 to (Array.length(game.grid) - 1)
   do
-
-    for l = 0 to (Array.length((game.grid).(k)))
+    for l = 0 to (Array.length(((game.grid).(k))) - 1)
     do
-      for m = 0 to (List.length((brick_get_corners(game , i , j))))
+      for m = 0 to (Array.length((brick_get_corners(game , k , l))))
       do
-        if is_inside_circle( (brick_get_corners(game , i , j)).(m) )
+        if is_inside_circle( ((!((ball_get(game,0)).position)).x) , ((!((ball_get(game,0)).position)).y) , (ball_size_pixel(game,ball_get(game,0))) , (fst((brick_get_corners(game , i , j)).(m))) , (snd((brick_get_corners(game , i , j)).(m)))  ) 
         then
           l_boolean := true
         else
@@ -1053,7 +1066,7 @@ let custom2_text() : string =
   @param game la partie en cours.
 *)
 let start_onclick(game : t_camlbrick) : unit=
-  ()
+  game.gamestate := PLAYING
 ;;
 
 (**
@@ -1066,7 +1079,7 @@ let start_onclick(game : t_camlbrick) : unit=
   @param game la partie en cours.
 *)
 let stop_onclick(game : t_camlbrick) : unit =
-  ()
+  game.gamestate := PAUSING
 ;;
 
 (**
@@ -1113,7 +1126,7 @@ let game_animate_balls (game : t_camlbrick) : unit =
 let game_update_balls(game : t_camlbrick) : unit =
   let l_balls : t_ball list = !(game.balls) in
     game.balls := ball_remove_out_of_border(game, l_balls);
-;;
+;; 
 
 (**
   Sous-fonction de game_update qui update l'état de la partie.
@@ -1151,7 +1164,18 @@ let animate_action(game : t_camlbrick) : unit =
     du jeu vidéo.
     Vous devez mettre tout le code qui permet de montrer l'évolution du jeu vidéo.    
   *)
-  game_animate_balls(game);
-  game_test_hit_balls(game, !(game.balls));
-  game_update(game);
+  if !(game.gamestate) = PLAYING
+  then (
+    game_animate_balls(game);
+    game_test_hit_balls(game, !(game.balls));
+    game_update(game);
+    )
+  else 
+    if !(game.gamestate) = PAUSING
+    then
+      ()
+    else
+      if !(game.gamestate) = GAMEOVER
+      then
+        ()
 ;;
