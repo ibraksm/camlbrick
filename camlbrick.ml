@@ -373,7 +373,7 @@ let make_camlbrick() : t_camlbrick =
     grid = l_grid ;
     gamestate = ref PAUSING ;
     paddle = l_paddle ;
-    balls = [l_ball]
+    balls = ref [l_ball]
     };
 ;;
 
@@ -391,11 +391,11 @@ let make_camlbrick() : t_camlbrick =
 let string_of_gamestate(game : t_camlbrick) : string =
 
   (* Itération 1,2,3 et 4 *)
-  if game.gamestate = PLAYING
+  if game.gamestate = ref PLAYING
   then
     "Playing"
   else
-    if game.gamestate = PAUSING
+    if game.gamestate = ref PAUSING
     then
       "Pausing"
     else 
@@ -463,7 +463,11 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
 (**
   fonction qui renvoie les coordonnées des quatres coins
   de la brique.
-
+*)
+let brick_get_corners(brick : t_brick_kind) : int * int list =
+  (0,[0])
+;;
+(**
   @param game partie en cours
   @param i coordonnée en abscisse de la brique
   @param j coordonnée en ordonnée de la brique
@@ -570,7 +574,7 @@ let has_ball(game : t_camlbrick) : bool =
 
   (* Itération 2 *)
 
-  if game.balls = [] 
+  if game.balls = ref [] 
   then 
     false
   else
@@ -589,7 +593,7 @@ let has_ball(game : t_camlbrick) : bool =
 let balls_count(game : t_camlbrick) : int =
   (* Itération 2 *)
 
-  List.length(game.balls)
+  List.length(!(game.balls))
 ;;
 
 (** 
@@ -604,7 +608,7 @@ let balls_get(game : t_camlbrick) : t_ball list =
 
   (* Itération 2 *)
 
-  game.balls
+  !(game.balls)
 ;;
 
 (**
@@ -619,7 +623,7 @@ let ball_get(game, i : t_camlbrick * int) : t_ball =
 
   (* Itération 2 *)
   
-  (List.nth (game.balls) (i))
+  (List.nth (!(game.balls)) (i))
 ;;
 
 (**
@@ -637,11 +641,11 @@ let ball_x(game , ball : t_camlbrick * t_ball) : int =
 
   let l_res : int ref = ref 0 in
 
-  for i = 0 to List.length(game.balls) - 1
+  for i = 0 to List.length(!(game.balls)) - 1
   do
     if (ball_get(game , i)).name = ball.name
     then
-      l_res := !((List.nth (game.balls) (i)).position).x 
+      l_res := !((List.nth (!(game.balls)) (i)).position).x 
     else
       ()
   done;
@@ -663,11 +667,11 @@ let ball_y(game , ball : t_camlbrick * t_ball) : int =
 
   let l_res : int ref = ref 0 in
 
-  for i = 0 to List.length(game.balls) - 1
+  for i = 0 to List.length(!(game.balls)) - 1
   do
     if (ball_get(game , i)).name = ball.name
     then
-      l_res := !((List.nth (game.balls) (i)).position).y 
+      l_res := !((List.nth (!(game.balls)) (i)).position).y 
     else
       ()
   done;
@@ -689,7 +693,7 @@ let ball_size_pixel(game, ball : t_camlbrick * t_ball) : int =
 
   let l_res : int ref = ref 0 in
 
-  for i = 0 to (List.length(game.balls) - 1)
+  for i = 0 to (List.length(!(game.balls)) - 1)
   do
 
   let l_current_ball : t_ball ref = ref (ball_get(game , i)) in
@@ -732,9 +736,9 @@ let ball_color(game, ball : t_camlbrick * t_ball) : t_camlbrick_color =
   (* Itération 2 *)
   let l_res : t_camlbrick_color ref = ref WHITE in
 
-  for i = 0 to List.length(game.balls) - 1
+  for i = 0 to List.length(!(game.balls)) - 1
   do
-    if List.nth (game.balls) (i) = ball
+    if List.nth (!(game.balls)) (i) = ball
     then
       if ball.size = BS_SMALL
         then
@@ -765,7 +769,7 @@ let ball_modif_speed(game, ball, dv : t_camlbrick * t_ball * t_vec2) : unit =
 
   (* Itération 3 *)
 
-  for i = 0 to ( List.length(game.balls) - 1 )
+  for i = 0 to ( List.length(!(game.balls)) - 1 )
   do
     (ball_get(game, i)).speed := vec2_add( !((ball_get(game, i)).speed) , dv )
   done;
@@ -785,7 +789,7 @@ let ball_modif_speed_sign(game, ball, sv : t_camlbrick * t_ball * t_vec2) : unit
   
   (* Itération 3 *)
 
-  for i = 0 to ( List.length(game.balls) - 1 )
+  for i = 0 to ( List.length(!(game.balls)) - 1 )
   do
     (ball_get(game, i)).speed := vec2_mult( !((ball_get(game, i)).speed) , sv )
   done;
@@ -881,9 +885,24 @@ let ball_hit_side_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : boo
   false
 ;;
 
-let game_test_hit_balls(game, balls : t_camlbrick * t_ball list) : unit =
-  (* Itération 3 *)
-  ()
+(**
+  Sous fonction d'animate_action qui gère les collisions
+  @author Ibraguim KARSAMOV
+*)
+let game_test_hit_balls (game, balls : t_camlbrick * t_ball list) : unit =
+  (* Iteration 3 *)
+  if !(game.balls) = balls then
+    for i = 0 to List.length balls - 1 do
+      let l_ball : t_ball = List.nth balls i in
+      let ball_position = !(l_ball.position) in
+      if ball_position.y > game.param.world_bricks_height + game.param.world_empty_height ||
+         ball_position.x < 0 || ball_position.x > game.param.world_width
+      then
+        let ball_speed = !(l_ball.speed) in 
+        l_ball.speed := { x = -(ball_speed.x); y = -(ball_speed.y) }
+      else ()
+    done
+  else ()
 ;;
 
 (**
@@ -1051,13 +1070,67 @@ let speed_change(game,xspeed : t_camlbrick * int) : unit=
   print_endline("Change speed : "^(string_of_int xspeed));
 ;;
 
-let animate_action(game : t_camlbrick) : unit = 
+(**
+Sous fonction d'animate action qui anime les balles
+@author Ibraguim KARSAMOV
+*)
+let game_animate_balls (game : t_camlbrick) : unit =
+  let l_balls : t_ball list = !(game.balls) in
+  for i = 0 to List.length l_balls - 1 do
+    let l_ball : t_ball = List.nth l_balls i in
+    let pos_x = !(l_ball.position).x + !(l_ball.speed).x in
+    let pos_y = !(l_ball.position).y + !(l_ball.speed).y in
+    l_ball.position := { x = pos_x; y = pos_y }
+  done
+;;
 
-  (* 
-  Iteration 1,2,3 et 4
+(**
+  Sous-fonction de game_update qui update la liste des balles du jeu en n'y mettant
+  que les balles qui ne sont pas hors bordure via la fonction ball_remove_out_of_border().
+  @author Ibraguim KARSAMOV
+*)
+let game_update_balls(game : t_camlbrick) : unit =
+  let l_balls : t_ball list = !(game.balls) in
+    game.balls := ball_remove_out_of_border(game, l_balls);
+;;
+
+(**
+  Sous-fonction de game_update qui update l'état de la partie.
+  Si la liste de balles est vide alors on change le gamestate par GAMEOVER
+  Sinon rien.
+  @author Ibraguim KARSAMOV 
+*)
+let game_update_gamestate(game : t_camlbrick) : unit =
+  if !(game.balls) = []
+  then game.gamestate := GAMEOVER
+  else ()
+;;
+
+(**
+Sous fonction d'animate action qui mets la partie à jour en enlevant les balles hors bordure
+et en vérifiant l'état de la partie.
+@author Ibraguim KARSAMOV
+*)
+let game_update(game : t_camlbrick) : unit =
+  game_update_balls(game);
+  game_update_gamestate(game);
+;;
+
+(**
+  Loop sur toutes les balles pour ajouter sa vitesse à la position d'une balle
+  Et regarde pour toutes les balles si elles dépassent les limites de la partie.
+  Si l'une d'elles la dépasse leur elle ira dans le sens contraire grâce à la
+  modification de la vitesse.
+  Recharge aussi le status de la partie.
+  @author Ibraguim KARSAMOV 
+*)
+let animate_action(game : t_camlbrick) : unit =  
+  (* Iteration 1,2,3 et 4
     Cette fonction est appelée par l'interface graphique à chaque frame
     du jeu vidéo.
     Vous devez mettre tout le code qui permet de montrer l'évolution du jeu vidéo.    
   *)
-  ()
+  game_animate_balls(game);
+  game_test_hit_balls(game, !(game.balls));
+  game_update(game);
 ;;
