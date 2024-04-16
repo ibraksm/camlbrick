@@ -844,10 +844,31 @@ let ball_remove_out_of_border(game,balls : t_camlbrick * t_ball list ) : t_ball 
   !(game.balls)
 ;;
 
-let ball_hit_paddle(game,ball,paddle : t_camlbrick * t_ball * t_paddle) : unit =
-
-  (* Itération 3 *)
-  ()
+(**
+  Fonction qui découpe une paddle en 5 parties et adapte la vitesse en x d'une balle selon
+  la partie de la paddle touchée
+  @author Ibraguim KARSAMOV
+*)
+let ball_hit_paddle (game, ball, paddle : t_camlbrick * t_ball * t_paddle) : unit =
+  let l_ball_x = !(ball.position).x in
+  let l_paddle_x = !(paddle.position).x in
+  let l_paddle_width = game.param.paddle_init_width in
+  let l_paddle_part_size = l_paddle_width / 5 in
+  let l_relative_collision_pos = (l_ball_x - l_paddle_x) / l_paddle_part_size in
+  let l_ball_speed = !(ball.speed) in
+  let l_new_speed_x =
+    if l_relative_collision_pos = 0 then
+      l_ball_speed.x - 2
+    else if l_relative_collision_pos = 1 then
+      l_ball_speed.x - 1 
+    else if l_relative_collision_pos = 3 then
+      l_ball_speed.x + 1
+    else if l_relative_collision_pos = 4 then
+      l_ball_speed.x + 2 
+    else
+      l_ball_speed.x
+  in
+  ball.speed := {x = l_new_speed_x ; y = -(l_ball_speed.y)}
 ;;
 
 
