@@ -16,17 +16,7 @@ en utilisant les rebonds d'une balle depuis une raquette contrôlée par l'utili
 
 @version 1
 *)
-(* 
-pour compiler : 
-   
-ocamlc -c camlbrick.ml
 
-ocamlc -c camlbrick_gui.ml -I +labltk labltk.cma camlbrick.cmo
-
-ocamlc -c camlbrick_launcher.ml -I +labltk labltk.cma camlbrick.cmo camlbrick_gui.cmo 
-
-ocamldoc -html -d doc -charset utf8 camlbrick.ml
-*)
 (** Compteur utilisé en interne pour afficher le numéro de la frame du jeu vidéo. 
     Vous pouvez utiliser cette variable en lecture, mais nous ne devez pas modifier
     sa valeur! *)
@@ -247,8 +237,6 @@ type t_ball =
   }
 ;;
 
-
-
 (** 
   type de la raquette de jeu
 
@@ -383,7 +371,7 @@ let make_camlbrick() : t_camlbrick =
   {
     param = l_param ; 
     grid = l_grid ;
-    gamestate = PAUSING ;
+    gamestate = ref PAUSING ;
     paddle = l_paddle ;
     balls = [l_ball]
     };
@@ -475,11 +463,21 @@ let brick_color(game , i , j : t_camlbrick * int * int) : t_camlbrick_color =
 (**
   fonction qui renvoie les coordonnées des quatres coins
   de la brique.
-*)
-let brick_get_corners(brick : t_brick_kind) : int * int list =
-  (0,0)
-;;
 
+  @param game partie en cours
+  @param i coordonnée en abscisse de la brique
+  @param j coordonnée en ordonnée de la brique
+
+  @author Thomas CALBERAC
+*)
+let brick_get_corners(game, i , j : t_camlbrick * int * int) : int * int array =
+  let l_i : int = i in
+  let l_j : int = j in
+  let l_width_brick = (param_get(game)).brick_width in
+  let l_height_brick = (param_get(game)).brick_height in
+
+  [((i * width_brick) , (j * l_height_brick)) ; (((i * width_brick) + width_brick) , (j * l_height_brick)) ; ((i * width_brick) , ((j * l_height_brick) + l_height_brick)) ; (((i * width_brick) + width_brick) , ((j * l_height_brick) + l_height_brick)) ] 
+;;
   
 (**
   focntion qui renvoie la taille de la raquette d'une partie donnée
@@ -853,22 +851,28 @@ let ball_hit_paddle(game,ball,paddle : t_camlbrick * t_ball * t_paddle) : unit =
 
 (* lire l'énoncé choix à faire *)
 let ball_hit_corner_brick(game,ball, i,j : t_camlbrick * t_ball * int * int) : bool =
+
   (* Itération 3 *)
 
-(*  
-  for k = 0 to Array.length(!(game.grid) - 1)
-  do
-    for l = 0 to Array.length(k)
-    do
-      if brick_get(game, k, l)
-      then
-        ()
-      else
-        ()
-    done;
-  done;*)
+  let l_boolean : bool ref = ref false in
 
-  false
+  for k = 0 to (Array.length(game.grid) - 1)
+  do
+
+    for l = 0 to (Array.length((game.grid).(k)))
+    do
+      for m = 0 to (List.length((brick_get_corners(game , i , j))))
+      do
+        if is_inside_circle( (brick_get_corners(game , i , j)).(m) )
+        then
+          l_boolean := true
+        else
+          ()
+      done;
+    done;
+  done;
+
+  !l_boolean
 ;;
 
 (* lire l'énoncé choix à faire *)
